@@ -1,0 +1,32 @@
+include LICENSE.md
+include README.md
+
+include setupbase.py
+include pytest.ini
+
+# Documentation
+graft docs
+exclude docs/\#*
+prune docs/build
+prune docs/gh-pages
+prune docs/dist
+
+# Examples
+graft examples
+
+# Javascript files
+graft {{ cookiecutter.python_package_name  }}/nbextension
+graft ts
+prune ts/node_modules
+prune ts/coverage
+prune ts/lib
+prune ts/test/build
+
+# Patterns to exclude from any directory
+global-exclude *~
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude node_modules
+global-exclude __pycache__
+global-exclude .git
+global-exclude .ipynb_checkpoints
