@@ -4,7 +4,6 @@
 # Copyright (c) {{ cookiecutter.author_name }}.
 # Distributed under the terms of the Modified BSD License.
 
-from .ndarray import *
 from .example import ExampleWidget
 from ._version import *
 

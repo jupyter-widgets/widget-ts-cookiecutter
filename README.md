@@ -41,8 +41,20 @@ information:
   be used for both the "back-end" and "front-end" packages.
 
 After this, you will have a directory containing files used for creating a
-custom Jupyter widget. You will now be able to easily package and distribute
-your custom Jupyter widget.
+custom Jupyter widget. To check that eveything is set up as it should be,
+you should run the tests:
+
+```bash
+# First install the python package. This will also build the JS packages.
+pip install -e .
+
+# Run the python tests. This should only give you TODO errors:
+py.test
+
+# Run the JS tests. This should again, only give TODO errors (Expected 'Value' to equal 'Expected value'):
+cd ts
+npm test
+```
 
 
 ## Releasing your initial packages:
@@ -55,6 +67,9 @@ your custom Jupyter widget.
   npm login
   cd ts
   npm publish
+  # Now, you need to update the entry in /<your python package>/jlextension/package.json
+  # from "file:../../ts" to "^<the version of the NPM packge you just released>
+  # After this, run:
   cd ../<your python package>/jlextension
   npm publish
   ```

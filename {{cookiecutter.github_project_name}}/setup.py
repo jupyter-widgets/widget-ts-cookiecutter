@@ -67,7 +67,7 @@ package_data = {
 
 setup_args = dict(
     name            = name,
-    description     = {{ cookiecutter.project_short_description }},
+    description     = '{{ cookiecutter.project_short_description }}',
     version         = version_ns['__version__'],
     scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,

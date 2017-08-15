@@ -50,6 +50,3 @@ class ExampleView extends DOMWidgetView {
     this.el.textContent = this.model.get('value');
   }
 }
-
-// Remove me:
-throw new Error('Implement your code');
