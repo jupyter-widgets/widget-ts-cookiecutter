@@ -7,7 +7,7 @@
 from __future__ import print_function
 
 # the name of the project
-name = '{{cookiecutter.repo_name}}'
+name = '{{ cookiecutter.python_package_name }}'
 
 #-----------------------------------------------------------------------------
 # Minimal Python version sanity check
