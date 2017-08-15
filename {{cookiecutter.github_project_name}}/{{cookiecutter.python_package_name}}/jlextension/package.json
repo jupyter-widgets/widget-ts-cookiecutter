@@ -1,6 +1,6 @@
 {
   "name": "{{ cookiecutter.jlab_extension_name }}",
-  "version": "{{ cookiecutter.jlab_extension_version }}",
+  "version": "0.1.0",
   "description": "A JupyterLab extension for {{ cookiecutter.python_package_name }}. {{ cookiecutter.project_short_description }}",
   "main": "build/index.js",
   "typings": "build/index.d.ts",

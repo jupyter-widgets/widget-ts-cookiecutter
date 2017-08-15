@@ -8,7 +8,5 @@
     "npm_package_version": "0.1.0",
     "jlab_extension_name": "jupyterlab-widget-example",
     "jlab_extension_id": "jupyter.extensions.example",
-    "jlab_extension_interface_name": "IExampleExtension",
-    "jlab_extension_version": "0.1.0",
 	"project_short_description": "A Custom Jupyter Widget Library"
 }

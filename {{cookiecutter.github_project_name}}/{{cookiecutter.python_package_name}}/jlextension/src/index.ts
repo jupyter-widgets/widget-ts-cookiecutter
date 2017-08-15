@@ -9,7 +9,7 @@ import {
   Token
 } from '@phosphor/coreutils';
 
-import * as myCode from '{{ cookiecutter.npm_package_name }}';
+import * as yourCode from '{{ cookiecutter.npm_package_name }}';
 
 import {
   INBWidgetExtension
@@ -23,20 +23,20 @@ const EXTENSION_ID = '{{ cookiecutter.jlab_extension_id }}'
  * The token identifying the JupyterLab plugin.
  */
 export
-const {{ cookiecutter.jlab_extension_interface_name }} = new Token<{{ cookiecutter.jlab_extension_interface_name }}>(EXTENSION_ID);
+const IExampleExtension = new Token<IExampleExtension>(EXTENSION_ID);
 
 /**
  * The type of the provided value of the plugin in JupyterLab.
  */
 export
-interface {{ cookiecutter.jlab_extension_interface_name }} {
+interface IExampleExtension {
 };
 
 
 /**
  * The notebook diff provider.
  */
-const exampleProvider: JupyterLabPlugin<{{ cookiecutter.jlab_extension_interface_name }}> = {
+const exampleProvider: JupyterLabPlugin<IExampleExtension> = {
   id: EXTENSION_ID,
   requires: [INBWidgetExtension],
   activate: activateWidgetExtension,
@@ -49,11 +49,11 @@ export default exampleProvider;
 /**
  * Activate the widget extension.
  */
-function activateWidgetExtension(app: JupyterLab, widgetsManager: INBWidgetExtension): {{ cookiecutter.jlab_extension_interface_name }} {
+function activateWidgetExtension(app: JupyterLab, widgetsManager: INBWidgetExtension): IExampleExtension {
   widgetsManager.registerWidget({
-      name: 'jupyter-datawidgets',
-      version: {{ cookiecutter.jlab_extension_interface_name }}.JUPYTER_EXTENSION_VERSION,
-      exports: {{ cookiecutter.jlab_extension_interface_name }}
+      name: '{{ cookiecutter.npm_package_name }}',
+      version: yourCode.JUPYTER_EXTENSION_VERSION,
+      exports: yourCode
     });
   return {};
 }
