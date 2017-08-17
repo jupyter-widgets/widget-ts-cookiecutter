@@ -1,0 +1,30 @@
+language: python
+python:
+  - 3.6
+sudo: false
+cache:
+  pip: true
+  directories:
+    - $HOME/.npm
+before_install:
+  - pip install -U pip setuptools
+  - nvm install 6
+  - pip install cookiecutter
+install:
+  - |
+    pushd $(mktemp -d)
+    cookiecutter $TRAVIS_BUILD_DIR --config-file $TRAVIS_BUILD_DIR/tests/testconfig.yaml --no-input
+    pushd jupyter-widget-testwidgets
+    pip install --upgrade -v ".[test]"
+script:
+  - |
+    py.test
+    npm test
+    popd
+    popd
+before_cache:
+  # Do not cache our own package
+  - |
+    rm -rf packages/{{ cookiecutter.jlab_extension_name }}/node_modules/{{ cookiecutter.npm_package_name }}
+after_success:
+    - codecov

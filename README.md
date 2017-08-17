@@ -48,7 +48,7 @@ you should run the tests:
 # First install the python package. This will also build the JS packages.
 pip install -e .
 
-# Run the python tests. This should only give you TODO errors:
+# Run the python tests. This should not give you a few sucessful example tests
 py.test
 
 # Run the JS tests. This should again, only give TODO errors (Expected 'Value' to equal 'Expected value'):

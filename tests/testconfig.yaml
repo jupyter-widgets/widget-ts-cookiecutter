@@ -1,0 +1,11 @@
+default_context:
+    author_name: "Test Widget"
+    author_email: "testwidget@example.com"
+    github_project_name: "jupyter-widget-testwidgets"
+    github_organization_name: "jupyter"
+    python_package_name: "ipywidgettestwidgets"
+    npm_package_name: "jupyter-widget-testwidgets"
+    npm_package_version: "1.1.0"
+    jlab_extension_name: "jupyterlab-widget-testwidgets"
+    jlab_extension_id: "jupyter.extensions.testwidgets"
+    project_short_description: "A Test Jupyter Widget Library"
