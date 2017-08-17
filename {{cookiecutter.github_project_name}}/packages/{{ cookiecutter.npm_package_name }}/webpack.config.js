@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     filename: 'index.js',
-    path: __dirname + '/../{{ cookiecutter.python_package_name }}/nbextension/static',
+    path: __dirname + '/../../{{ cookiecutter.python_package_name }}/nbextension/static',
     libraryTarget: 'amd'
   },
   module: {

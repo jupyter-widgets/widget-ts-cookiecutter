@@ -14,7 +14,7 @@ matrix:
 cache:
   pip: true
   directories:
-    - {{ cookiecutter.python_package_name  }}/jlextension/node_modules # NPM packages
+    - {{ cookiecutter.python_package_name }}/jlextension/node_modules # NPM packages
     - ts/node_modules # NPM packages
     - $HOME/.npm
 before_install:
@@ -47,15 +47,14 @@ script:
   - |
     if [[ $GROUP == python ]]; then
       pushd $(mktemp -d)
-      py.test -l --cov-report xml:$TRAVIS_BUILD_DIR/coverage.xml --cov={{ cookiecutter.python_package_name  }} --pyargs {{ cookiecutter.python_package_name  }}
+      py.test -l --cov-report xml:$TRAVIS_BUILD_DIR/coverage.xml --cov={{ cookiecutter.python_package_name }} --pyargs {{ cookiecutter.python_package_name }}
+      popd
     elif [[ $GROUP == js ]]; then
-      pushd ts
       npm test
     fi
 before_cache:
   # Do not cache our own package
   - |
-    popd
-    rm -rf {{ cookiecutter.python_package_name  }}/jlextension/node_modules/{{ cookiecutter.npm_package_name }}
+    rm -rf packages/{{ cookiecutter.jlab_extension_name }}/node_modules/{{ cookiecutter.npm_package_name }}
 after_success:
     - codecov

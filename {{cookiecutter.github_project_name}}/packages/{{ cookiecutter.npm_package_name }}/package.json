@@ -5,6 +5,9 @@
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
+    "clean:lib": "rimraf lib",
+    "clean:nbextension": "rimraf ../../{{ cookiecutter.python_package_name }}/nbextension/static/index.js",
+    "clean": "npm run clean:lib && npm run clean:nbextension",
     "build:nbextension": "webpack",
     "build:lib": "tsc --project src",
     "build": "npm run build:lib && npm run build:nbextension",
@@ -12,7 +15,8 @@
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
     "test:debug": "karma start --browsers=Chrome --singleRun=false --debug=true tests/karma.conf.js",
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
-    "test:ie": "karma start --browsers=IE tests/karma.conf.js"
+    "test:ie": "karma start --browsers=IE tests/karma.conf.js",
+    "prepublish": "npm run clean && npm run build"
   },
   "keywords": [
     "jupyter",

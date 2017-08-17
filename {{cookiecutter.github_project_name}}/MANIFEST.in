@@ -1,8 +1,12 @@
-include LICENSE.md
+include LICENSE.txt
 include README.md
 
 include setupbase.py
 include pytest.ini
+include .coverage.rc
+
+include package.json
+include lerna.json
 
 # Documentation
 graft docs
@@ -15,18 +19,17 @@ prune docs/dist
 graft examples
 
 # Javascript files
-graft {{ cookiecutter.python_package_name  }}/nbextension
-graft ts
-prune ts/node_modules
-prune ts/coverage
-prune ts/lib
-prune ts/test/build
+graft {{ cookiecutter.python_package_name }}/nbextension
+graft packages
+prune packages/**/node_modules
+prune packages/**/coverage
+prune packages/**/node_modules
+prune packages/**/lib
+prune packages/**/test/build
 
 # Patterns to exclude from any directory
 global-exclude *~
 global-exclude *.pyc
 global-exclude *.pyo
-global-exclude node_modules
-global-exclude __pycache__
 global-exclude .git
 global-exclude .ipynb_checkpoints
