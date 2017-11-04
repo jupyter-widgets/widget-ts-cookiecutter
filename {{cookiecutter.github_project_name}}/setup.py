@@ -37,11 +37,13 @@ from setupbase import (create_cmdclass, install_npm, ensure_targets,
 
 pjoin = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))
+static = os.path.join(here, name, 'nbextension', 'static')
+tar_path = os.path.join(here, name, '*.tgz')
 
 # Representative files that should exist after a successful build
 jstargets = [
     os.path.join(here, name, 'nbextension', 'static', 'extension.js'),
-    os.path.join(here, 'packages', '{{ cookiecutter.jlab_extension_name }}', 'build', 'index.js'),
+    os.path.join(here, 'lib', 'plugin.js'),
 ]
 
 version_ns = {}
@@ -49,15 +51,18 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
     exec(f.read(), {}, version_ns)
 
 
-cmdclass = create_cmdclass(('jsdeps',))
+cmdclass = create_cmdclass(('jsdeps',),
+                           data_dirs=[static, os.path.join(here, name)])
 cmdclass['jsdeps'] = combine_commands(
-    install_npm(here),
+    install_npm(here, build_cmd='build:release'),
     ensure_targets(jstargets),
 )
+
 
 package_data = {
     name: [
         'nbextension/static/*.*',
+        '*.tgz'
     ]
 }
 
@@ -70,6 +75,16 @@ setup_args = dict(
     cmdclass        = cmdclass,
     packages        = find_packages(here),
     package_data    = package_data,
+    data_files      = [
+        ('share/jupyter/nbextensions/example', [
+            '{{ cookiecutter.python_package_name }}/static/extension.js',
+            '{{ cookiecutter.python_package_name }}/static/index.js',
+            '{{ cookiecutter.python_package_name }}/static/index.js.map'
+        ]),
+        ('share/jupyter/lab/extensions', [
+            os.path.relpath(f, '.') for f in glob(tar_path)
+        ])
+    ],
     author          = '{{ cookiecutter.author_name }}',
     author_email    = '{{ cookiecutter.author_email }}',
     url             = 'https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}',

@@ -25,3 +25,6 @@ script:
   - npm test
   - popd
   - popd
+  - jupyter nbextension enable --py --sys-prefix jupyter-widget-testwidgets
+  - pip install jupyterlab
+  - jupyter labextension link .
