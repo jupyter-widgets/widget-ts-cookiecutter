@@ -81,7 +81,6 @@ setup_args = dict(
     packages        = find_packages(here),
     package_data    = package_data,
     include_package_data = True,
-    data_files      = data_files,
     author          = '{{ cookiecutter.author_name }}',
     author_email    = '{{ cookiecutter.author_email }}',
     url             = 'https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}',
