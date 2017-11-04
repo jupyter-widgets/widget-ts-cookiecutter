@@ -17,7 +17,9 @@
     "test:debug": "karma start --browsers=Chrome --singleRun=false --debug=true tests/karma.conf.js",
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
     "test:ie": "karma start --browsers=IE tests/karma.conf.js",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "watch:nbextension": "webpack --watch",
+    "watch:lib": "tsc -w --project src"
   },
   "keywords": [
     "jupyter",
