@@ -20,7 +20,7 @@
     "prepack": "npm run build",
     "watch:nbextension": "webpack --watch",
     "watch:lib": "tsc -w --project src",
-    "watch": "run-p watch:*"
+    "watch": "npm-run-all -p watch:*"
   },
   "keywords": [
     "jupyter",
