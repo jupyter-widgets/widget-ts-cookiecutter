@@ -23,7 +23,7 @@ before_script:
 script:
   - py.test
   - npm test
-  - jupyter nbextension enable --py --sys-prefix jupyter-widget-testwidgets
+  - jupyter nbextension enable --py --sys-prefix ipywidgettestwidgets
   - pip install jupyterlab
   - jupyter labextension link 
   - popd
