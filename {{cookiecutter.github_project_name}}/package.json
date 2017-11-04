@@ -30,6 +30,8 @@
     "@jupyter-widgets/base": "^1.0.1"
   },
   "devDependencies": {
+    "@phosphor/application": "^1.5.0",
+    "@phosphor/widgets": "^1.5.0",
     "@types/expect.js": "^0.3.29",
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.17",

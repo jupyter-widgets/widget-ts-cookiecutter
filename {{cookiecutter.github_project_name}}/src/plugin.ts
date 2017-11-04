@@ -40,7 +40,7 @@ export default examplePlugin;
  * Activate the widget extension.
  */
 function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWidgetRegistry): void {
-  widgetsManager.registerWidget({
+  registry.registerWidget({
       name: '{{ cookiecutter.npm_package_name }}',
       version: JUPYTER_EXTENSION_VERSION,
       exports: yourCode
