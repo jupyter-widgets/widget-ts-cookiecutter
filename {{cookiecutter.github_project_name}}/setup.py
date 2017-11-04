@@ -65,20 +65,14 @@ package_data = {
     ]
 }
 
-
-def get_data_files():
-    """Get the data_files for the distribution.
-    """
-    return [
-        ('share/jupyter/nbextensions/' % "{{ cookiecutter.npm_package_name }}", [
-            '%s/extension.js' % static,
-            '%s/index.js' % static,
-            '%s/index.js.map' % static
-        ]),
-        ('share/jupyter/lab/extensions', [
-            os.path.relpath(f, '.') for f in glob(tar_path)
-        ])
-    ]
+data_files = [
+    ('share/jupyter/nbextensions/%s' % name, [
+        os.path.relpath(f, '.') for f in glob(pjoin(static, '*.js*'))
+    ]),
+    ('share/jupyter/lab/extensions', [
+        os.path.relpath(f, '.') for f in glob(tar_path)
+    ])
+]
 
 
 setup_args = dict(
@@ -90,7 +84,7 @@ setup_args = dict(
     packages        = find_packages(here),
     package_data    = package_data,
     include_package_data = True,
-    data_files      = get_data_files(),
+    data_files      = data_files,
     author          = '{{ cookiecutter.author_name }}',
     author_email    = '{{ cookiecutter.author_email }}',
     url             = 'https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}',
