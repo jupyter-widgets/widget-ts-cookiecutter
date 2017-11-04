@@ -33,7 +33,7 @@ from glob import glob
 from setuptools import setup, find_packages
 
 from setupbase import (create_cmdclass, install_npm, ensure_targets,
-    combine_commands)
+    combine_commands, expand_data_files)
 
 pjoin = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))
@@ -51,13 +51,7 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
     exec(f.read(), {}, version_ns)
 
 
-cmdclass = create_cmdclass(
-    ('jsdeps',),
-    data_file_patterns=[
-        ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}', pjoin(static, '*.js*')),
-        ('share/jupyter/lab/extensions', tar_path)
-    ]
-)
+cmdclass = create_cmdclass(('jsdeps',))
 cmdclass['jsdeps'] = combine_commands(
     install_npm(here, build_cmd='build:release'),
     ensure_targets(jstargets),
@@ -71,6 +65,11 @@ package_data = {
     ]
 }
 
+data_files = expand_data_files([
+    ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}', pjoin(static, '*.js*')),
+    ('share/jupyter/lab/extensions', tar_path)
+]
+
 
 setup_args = dict(
     name            = name,
@@ -81,6 +80,7 @@ setup_args = dict(
     packages        = find_packages(here),
     package_data    = package_data,
     include_package_data = True,
+    data_files      = data_files,
     author          = '{{ cookiecutter.author_name }}',
     author_email    = '{{ cookiecutter.author_email }}',
     url             = 'https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}',

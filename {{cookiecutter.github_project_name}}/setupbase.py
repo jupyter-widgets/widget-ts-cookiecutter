@@ -64,6 +64,21 @@ else:
 # ---------------------------------------------------------------------------
 
 
+def expand_data_files(data_file_patterns):
+    """Expand data file patterns to a valid data_files spec.
+
+    Parameters
+    -----------
+    data_file_patterns: list(tuple)
+        A list of (directory, glob pattern) for the data file locations.
+    """
+    data_files = []
+    for (directory, pattern) in data_file_patterns:
+        files = [os.path.relpath(f, '.') for f in glob(pattern)]
+        data_files.append((directory, files))
+    return data_files
+
+
 def find_packages(top):
     """
     Find all of the packages.
@@ -84,20 +99,17 @@ def update_package_data(distribution):
     build_py.finalize_options()
 
 
-def create_cmdclass(wrappers=None, data_file_patterns=None):
+def create_cmdclass(wrappers=None):
     """Create a command class with the given optional wrappers.
 
     Parameters
     ----------
     wrappers: list(str), optional
         The cmdclass names to run before running other commands
-    data_file_patterns: list(tuple), optional
-        A list of (directory, glob pattern) for the data file locations.
     """
     egg = bdist_egg if 'bdist_egg' in sys.argv else bdist_egg_disabled
     wrappers = wrappers or []
-    data_file_patterns = data_file_patterns or []
-    wrapper = functools.partial(wrap_command, wrappers, data_file_patterns)
+    wrapper = functools.partial(wrap_command, wrappers)
     cmdclass = dict(
         build_py=wrapper(build_py, strict=is_repo),
         sdist=wrapper(sdist, strict=True),
@@ -340,15 +352,13 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None):
 # ---------------------------------------------------------------------------
 
 
-def wrap_command(cmds, data_file_patterns, cls, strict=True):
+def wrap_command(cmds, cls, strict=True):
     """Wrap a setup command
 
     Parameters
     ----------
     cmds: list(str)
         The names of the other commands to run prior to the command.
-    data_file_patterns: list(tuple)
-        A list of (directory, glob pattern) for the data file locations.
     strict: boolean, optional
         Wether to raise errors when a pre-command fails.
     """
@@ -365,13 +375,6 @@ def wrap_command(cmds, data_file_patterns, cls, strict=True):
                         pass
 
             result = cls.run(self)
-            if data_file_patterns:
-                data_files = self.distribution.data_files or []
-                for (directory, pattern) in data_file_patterns:
-                    files = [os.path.relpath(f, '.') for f in glob(pattern)]
-                    data_files.append((directory, files))
-                # update data-files in case this created new files
-                self.distribution.data_files = data_files
             # update package data
             update_package_data(self.distribution)
             return result
