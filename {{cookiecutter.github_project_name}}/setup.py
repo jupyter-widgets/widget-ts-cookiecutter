@@ -51,7 +51,13 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
     exec(f.read(), {}, version_ns)
 
 
-cmdclass = create_cmdclass(('jsdeps',))
+cmdclass = create_cmdclass(
+    ('jsdeps',),
+    data_file_patterns=[
+        ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}', pjoin(static, '*.js*')),
+        ('share/jupyter/lab/extensions', tar_path)
+    ]
+)
 cmdclass['jsdeps'] = combine_commands(
     install_npm(here, build_cmd='build:release'),
     ensure_targets(jstargets),
@@ -60,19 +66,10 @@ cmdclass['jsdeps'] = combine_commands(
 
 package_data = {
     name: [
-        'nbextension/static/*.*',
+        'nbextension/static/*.*js*',
         '*.tgz'
     ]
 }
-
-data_files = [
-    ('share/jupyter/nbextensions/%s' % name, [
-        os.path.relpath(f, '.') for f in glob(pjoin(static, '*.js*'))
-    ]),
-    ('share/jupyter/lab/extensions', [
-        os.path.relpath(f, '.') for f in glob(tar_path)
-    ])
-]
 
 
 setup_args = dict(
