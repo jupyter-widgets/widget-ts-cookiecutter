@@ -1,7 +1,5 @@
 
 
 export * from './example';
-
-export {
-  JUPYTER_EXTENSION_VERSION
-} from './version';
+export * from './plugin';
+export * from './version';
