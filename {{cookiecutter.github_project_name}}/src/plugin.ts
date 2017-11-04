@@ -9,15 +9,15 @@ import {
   Widget
 } from '@phosphor/widgets';
 
-import * as yourCode from './example';
+import {
+  IJupyterWidgetRegistry
+ } from '@jupyter-widgets/base';
+
+import * as WIDGET_EXPORTS from './widget';
 
 import {
   JUPYTER_EXTENSION_VERSION
 } from './version';
-
-import {
-  IJupyterWidgetRegistry
- } from '@jupyter-widgets/base';
 
 
 const EXTENSION_ID = '{{ cookiecutter.jlab_extension_id }}';
@@ -43,6 +43,6 @@ function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWid
   registry.registerWidget({
     name: '{{ cookiecutter.npm_package_name }}',
     version: JUPYTER_EXTENSION_VERSION,
-    exports: yourCode
+    exports: WIDGET_EXPORTS
   });
 }
