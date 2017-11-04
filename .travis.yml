@@ -23,8 +23,12 @@ before_script:
 script:
   - py.test
   - npm test
+  - pip uininstall -y ipywidgettestwidgets
+  - pip install .
   - jupyter nbextension enable --py --sys-prefix ipywidgettestwidgets
   - pip install jupyterlab
-  - jupyter labextension link 
+  - jupyter labextension list
+  - jupyter labextension list 2>&1 | grep -q jupyter-widget-example
+  - jupyter labextension link
   - popd
   - popd

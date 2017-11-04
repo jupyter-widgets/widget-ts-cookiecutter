@@ -51,8 +51,7 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
     exec(f.read(), {}, version_ns)
 
 
-cmdclass = create_cmdclass(('jsdeps',),
-                           data_dirs=[static, os.path.join(here, name)])
+cmdclass = create_cmdclass(('jsdeps',))
 cmdclass['jsdeps'] = combine_commands(
     install_npm(here, build_cmd='build:release'),
     ensure_targets(jstargets),
@@ -67,6 +66,21 @@ package_data = {
 }
 
 
+def get_data_files():
+    """Get the data_files for the distribution.
+    """
+    return [
+        ('share/jupyter/nbextensions/' % {{ cookiecutter.npm_package_name }}, [
+            '%s/extension.js' % static,
+            '%s/index.js' % static,
+            '%s/index.js.map' % static
+        ]),
+        ('share/jupyter/lab/extensions', [
+            os.path.relpath(f, '.') for f in glob(tar_path)
+        ])
+    ]
+
+
 setup_args = dict(
     name            = name,
     description     = '{{ cookiecutter.project_short_description }}',
@@ -75,16 +89,8 @@ setup_args = dict(
     cmdclass        = cmdclass,
     packages        = find_packages(here),
     package_data    = package_data,
-    data_files      = [
-        ('share/jupyter/nbextensions/example', [
-            '{{ cookiecutter.python_package_name }}/static/extension.js',
-            '{{ cookiecutter.python_package_name }}/static/index.js',
-            '{{ cookiecutter.python_package_name }}/static/index.js.map'
-        ]),
-        ('share/jupyter/lab/extensions', [
-            os.path.relpath(f, '.') for f in glob(tar_path)
-        ])
-    ],
+    include_package_data = True,
+    data_files      = get_data_files(),
     author          = '{{ cookiecutter.author_name }}',
     author_email    = '{{ cookiecutter.author_email }}',
     url             = 'https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}',
