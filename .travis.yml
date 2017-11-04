@@ -23,7 +23,7 @@ before_script:
 script:
   - py.test
   - npm test
-  - pip uininstall -y ipywidgettestwidgets
+  - pip uninstall -y ipywidgettestwidgets
   - pip install .
   - jupyter nbextension enable --py --sys-prefix ipywidgettestwidgets
   - pip install jupyterlab
