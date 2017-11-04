@@ -70,7 +70,7 @@ def get_data_files():
     """Get the data_files for the distribution.
     """
     return [
-        ('share/jupyter/nbextensions/' % {{ cookiecutter.npm_package_name }}, [
+        ('share/jupyter/nbextensions/' % "{{ cookiecutter.npm_package_name }}", [
             '%s/extension.js' % static,
             '%s/index.js' % static,
             '%s/index.js.map' % static
