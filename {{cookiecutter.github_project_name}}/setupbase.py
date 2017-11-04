@@ -44,9 +44,10 @@ __version__ = '0.1.0'
 # ---------------------------------------------------------------------------
 
 
-here = os.path.abspath(os.path.dirname(sys.argv[0]))
+here = os.path.dirname(__file__)
 is_repo = os.path.exists(pjoin(here, '.git'))
 node_modules = pjoin(here, 'node_modules')
+
 npm_path = ':'.join([
     pjoin(here, 'node_modules', '.bin'),
     os.environ.get('PATH', os.defpath),
