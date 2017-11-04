@@ -41,9 +41,8 @@ export default examplePlugin;
  */
 function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWidgetRegistry): void {
   registry.registerWidget({
-      name: '{{ cookiecutter.npm_package_name }}',
-      version: JUPYTER_EXTENSION_VERSION,
-      exports: yourCode
-    });
-  return {};
+    name: '{{ cookiecutter.npm_package_name }}',
+    version: JUPYTER_EXTENSION_VERSION,
+    exports: yourCode
+  });
 }
