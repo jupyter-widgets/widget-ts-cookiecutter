@@ -28,7 +28,7 @@ script:
   - jupyter nbextension enable --py --sys-prefix ipywidgettestwidgets
   - pip install jupyterlab
   - jupyter labextension list
-  - jupyter labextension list 2>&1 | grep -q jupyter-widget-example
+  - jupyter labextension list 2>&1 | grep -q jupyter-widget-testwidgets
   - jupyter labextension link
   - popd
   - popd
