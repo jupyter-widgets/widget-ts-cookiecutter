@@ -74,7 +74,7 @@ def expand_data_files(data_file_patterns):
     """
     data_files = []
     for (directory, pattern) in data_file_patterns:
-        files = [os.path.relpath(f, '.') for f in glob(pattern)]
+        files = [os.path.relpath(f, here) for f in glob(pattern)]
         data_files.append((directory, files))
     return data_files
 
