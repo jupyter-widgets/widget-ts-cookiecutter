@@ -70,9 +70,6 @@
     "webpack": "^3.4.1"
   },
   "jupyterlab": {
-    "extension": "lib/plugin",
-    "singletonPackages": [
-      "@jupyter-widgets/base"
-    ]
+    "extension": "lib/plugin"
   }
 }
