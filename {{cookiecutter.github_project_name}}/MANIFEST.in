@@ -6,7 +6,7 @@ include pytest.ini
 include .coverage.rc
 
 include package.json
-include lerna.json
+include {{ cookiecutter.python_package_name }}/labextension/*.tgz
 
 # Documentation
 graft docs

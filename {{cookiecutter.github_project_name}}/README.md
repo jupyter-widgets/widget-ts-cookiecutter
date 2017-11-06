@@ -9,11 +9,10 @@
 
 ## Installation
 
-A typical installation requires the following three commands to be run:
+A typical installation requires the following commands to be run:
 
 ```bash
 pip install {{ cookiecutter.python_package_name  }}
-jupyter nbextension install --py [--sys-prefix|--user|--system] {{ cookiecutter.python_package_name  }}
 jupyter nbextension enable --py [--sys-prefix|--user|--system] {{ cookiecutter.python_package_name  }}
 ```
 
@@ -21,5 +20,5 @@ Or, if you use jupyterlab:
 
 ```bash
 pip install {{ cookiecutter.python_package_name  }}
-jupyter labextension install {{ cookiecutter.jlab_extension_name }}
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
 ```

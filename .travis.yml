@@ -23,5 +23,15 @@ before_script:
 script:
   - py.test
   - npm test
+  # Make a non-local install so the data_files get populated
+  - pip uninstall -y ipywidgettestwidgets
+  - pip install .
+  - jupyter nbextension enable --py --sys-prefix ipywidgettestwidgets
+  - pip install jupyterlab
+  # Make sure our lab extension was installed.
+  - jupyter labextension list
+  - jupyter labextension list 2>&1 | grep -q jupyter-widget-testwidgets
+  # Make sure our lab extension can be linked.
+  - jupyter labextension link
   - popd
   - popd

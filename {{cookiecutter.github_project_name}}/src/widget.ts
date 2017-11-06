@@ -2,14 +2,12 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  DOMWidgetModel, DOMWidgetView, ManagerBase
+  DOMWidgetModel, DOMWidgetView
 } from '@jupyter-widgets/base';
 
 import {
   JUPYTER_EXTENSION_VERSION
 } from './version';
-
-
 
 
 export
@@ -38,6 +36,7 @@ class ExampleModel extends DOMWidgetModel {
   static view_module = '{{ cookiecutter.npm_package_name }}';   // Set to null if no view
   static view_module_version = JUPYTER_EXTENSION_VERSION;
 }
+
 
 export
 class ExampleView extends DOMWidgetView {
