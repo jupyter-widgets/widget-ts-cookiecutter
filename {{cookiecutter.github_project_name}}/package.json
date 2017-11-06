@@ -1,16 +1,16 @@
 {
-  "name": "jupyter-widget-example",
-  "version": "0.1.0",
-  "description": "A Custom Jupyter Widget Library",
+  "name": "{{ cookiecutter.npm_package_name }}",
+  "version": "{{ cookiecutter.npm_package_version }}",
+  "description": "{{ cookiecutter.project_short_description }}",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab extension",
     "widgets"
   ],
-  "homepage": "https://github.com/jupyter/ipywidgetexample",
+  "homepage": "https://github.com/jupyter/{{ cookiecutter.npm_package_name }}",
   "bugs": {
-    "url": "https://github.com/jupyter/ipywidgetexample/issues"
+    "url": "https://github.com/jupyter/{{ cookiecutter.npm_package_name }}/issues"
   },
   "license": "BSD-3-Clause",
   "author": "",
@@ -18,17 +18,18 @@
   "types": "./lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupyter/ipywidgetexample"
+    "url": "https://github.com/jupyter/{{ cookiecutter.npm_package_name }}"
   },
   "scripts": {
     "build": "npm run build:lib && npm run build:nbextension",
-    "build:labextension": "cd ipywidgetexample && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../..",
+    "build:labextension": "cd {{ cookiecutter.python_package_name }} && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../..",
     "build:lib": "tsc --project src",
     "build:nbextension": "webpack",
     "build:release": "npm run build:labextension && npm run build:nbextension",
     "clean": "npm run clean:lib && npm run clean:nbextension",
     "clean:lib": "rimraf lib",
-    "clean:nbextension": "rimraf ipywidgetexample/nbextension/static/index.js",
+    "clean:labextension": "rimraf {{ cookiecutter.python_package_name }}/labextension",
+    "clean:nbextension": "rimraf {{ cookiecutter.python_package_name }}/nbextension/static/index.js",
     "prepare": "npm run build:lib",
     "test": "npm run test:firefox",
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
