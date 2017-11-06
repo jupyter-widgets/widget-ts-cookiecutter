@@ -25,7 +25,7 @@
     "build:labextension": "cd {{ cookiecutter.python_package_name }} && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../..",
     "build:lib": "tsc --project src",
     "build:nbextension": "webpack",
-    "build:release": "npm run build:lib && npm run build:labextension && npm run build:nbextension",
+    "build:all": "npm run build:lib && npm run build:labextension && npm run build:nbextension",
     "clean": "npm run clean:lib && npm run clean:nbextension",
     "clean:lib": "rimraf lib",
     "clean:labextension": "rimraf {{ cookiecutter.python_package_name }}/labextension",

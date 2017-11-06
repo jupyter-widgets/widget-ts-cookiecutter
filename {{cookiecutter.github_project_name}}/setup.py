@@ -53,7 +53,7 @@ with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
 
 cmdclass = create_cmdclass(('jsdeps',))
 cmdclass['jsdeps'] = combine_commands(
-    install_npm(here, build_cmd='build:release'),
+    install_npm(here, build_cmd='build:all'),
     ensure_targets(jstargets),
 )
 
