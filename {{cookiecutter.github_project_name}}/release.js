@@ -17,7 +17,7 @@ var target = path.join(
 
 fs.ensureDir(target);
 
-childProcess.execSync('npm pack ' + here, {
-  cwd: target,
-  stdio: [0, 1, 2]
-});
+// childProcess.execSync('npm pack ' + here, {
+//   cwd: target,
+//   stdio: [0, 1, 2]
+// });
