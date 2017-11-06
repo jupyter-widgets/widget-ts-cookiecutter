@@ -37,12 +37,12 @@ from setupbase import (create_cmdclass, install_npm, ensure_targets,
 
 pjoin = os.path.join
 here = os.path.abspath(os.path.dirname(__file__))
-static = os.path.join(here, name, 'nbextension', 'static')
-tar_path = os.path.join(here, name, '*.tgz')
+nb_path = os.path.join(here, name, 'nbextension', 'static')
+lab_path = os.path.join(here, name, 'labextension', '*.tgz')
 
 # Representative files that should exist after a successful build
 jstargets = [
-    os.path.join(here, name, 'nbextension', 'static', 'extension.js'),
+    os.path.join(nb_path, 'extension.js'),
     os.path.join(here, 'lib', 'plugin.js'),
 ]
 
@@ -61,13 +61,13 @@ cmdclass['jsdeps'] = combine_commands(
 package_data = {
     name: [
         'nbextension/static/*.*js*',
-        '*.tgz'
+        'labextension/*.tgz'
     ]
 }
 
 data_files = expand_data_files([
-    ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}', pjoin(static, '*.js*')),
-    ('share/jupyter/lab/extensions', tar_path)
+    ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}', pjoin(nb_path, '*.js*')),
+    ('share/jupyter/lab/extensions', lab_path)
 ])
 
 

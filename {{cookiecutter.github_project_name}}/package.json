@@ -10,7 +10,7 @@
     "clean": "npm run clean:lib && npm run clean:nbextension",
     "build:nbextension": "webpack",
     "build:lib": "tsc --project src",
-    "build:release": "npm run build && cd {{ cookiecutter.python_package_name }} && npm pack ..",
+    "build:release": "node release.js",
     "build": "npm run build:lib && npm run build:nbextension",
     "test": "npm run test:firefox",
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
@@ -39,6 +39,7 @@
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.17",
     "expect.js": "^0.3.1",
+    "fs-extra": "^4.0.2",
     "json-loader": "^0.5.7",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
@@ -58,7 +59,7 @@
     "type": "git",
     "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}"
   },
-  "author": "{{ cookiecutter.project_short_description }}",
+  "author": "{{ cookiecutter.author_name }}",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}/issues"
