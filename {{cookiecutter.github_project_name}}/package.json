@@ -27,7 +27,8 @@
     "widgets"
   ],
   "jupyterlab": {
-    "extension": "lib/plugin"
+    "extension": "lib/plugin",
+    "singletonPackages": ["@jupyter-widgets/base"]
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.0.1"
