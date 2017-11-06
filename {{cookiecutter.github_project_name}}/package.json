@@ -1,23 +1,24 @@
 {
-  "name": "{{ cookiecutter.npm_package_name }}",
-  "version": "{{ cookiecutter.npm_package_version }}",
-  "description": "{{ cookiecutter.project_short_description }}",
+  "name": "jupyter-widget-example",
+  "version": "0.1.0",
+  "description": "A Custom Jupyter Widget Library",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "clean:lib": "rimraf lib",
-    "clean:nbextension": "rimraf {{ cookiecutter.python_package_name }}/nbextension/static/index.js",
+    "clean:nbextension": "rimraf ipywidgetexample/nbextension/static/index.js",
     "clean": "npm run clean:lib && npm run clean:nbextension",
     "build:nbextension": "webpack",
+    "build:labextension": "cd ipywidgetexample && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../..",
     "build:lib": "tsc --project src",
-    "build:release": "cd {{ cookiecutter.python_package_name }} && rmraf labextension && mkdirp labextension && cd labextension && npm pack ../..",
+    "build:release": "npm run build:labextension && npm run build:nbextension",
     "build": "npm run build:lib && npm run build:nbextension",
+    "prepare": "npm run build:lib",
     "test": "npm run test:firefox",
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
     "test:debug": "karma start --browsers=Chrome --singleRun=false --debug=true tests/karma.conf.js",
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
     "test:ie": "karma start --browsers=IE tests/karma.conf.js",
-    "prepack": "npm run build",
     "watch:nbextension": "webpack --watch",
     "watch:lib": "tsc -w --project src",
     "watch": "npm-run-all -p watch:*"
@@ -60,13 +61,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}"
+    "url": "https://github.com/jupyter/ipywidgetexample"
   },
-  "author": "{{ cookiecutter.author_name }}",
+  "author": "",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}/issues"
+    "url": "https://github.com/jupyter/ipywidgetexample/issues"
   },
-  "homepage": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}"
+  "homepage": "https://github.com/jupyter/ipywidgetexample"
 
 }
