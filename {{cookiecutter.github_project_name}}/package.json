@@ -2,37 +2,46 @@
   "name": "jupyter-widget-example",
   "version": "0.1.0",
   "description": "A Custom Jupyter Widget Library",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab extension",
+    "widgets"
+  ],
+  "homepage": "https://github.com/jupyter/ipywidgetexample",
+  "bugs": {
+    "url": "https://github.com/jupyter/ipywidgetexample/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "",
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jupyter/ipywidgetexample"
+  },
   "scripts": {
-    "clean:lib": "rimraf lib",
-    "clean:nbextension": "rimraf ipywidgetexample/nbextension/static/index.js",
-    "clean": "npm run clean:lib && npm run clean:nbextension",
-    "build:nbextension": "webpack",
+    "build": "npm run build:lib && npm run build:nbextension",
     "build:labextension": "cd ipywidgetexample && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../..",
     "build:lib": "tsc --project src",
+    "build:nbextension": "webpack",
     "build:release": "npm run build:labextension && npm run build:nbextension",
-    "build": "npm run build:lib && npm run build:nbextension",
+    "clean": "npm run clean:lib && npm run clean:nbextension",
+    "clean:lib": "rimraf lib",
+    "clean:nbextension": "rimraf ipywidgetexample/nbextension/static/index.js",
     "prepare": "npm run build:lib",
     "test": "npm run test:firefox",
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
     "test:debug": "karma start --browsers=Chrome --singleRun=false --debug=true tests/karma.conf.js",
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
     "test:ie": "karma start --browsers=IE tests/karma.conf.js",
-    "watch:nbextension": "webpack --watch",
+    "watch": "npm-run-all -p watch:*",
     "watch:lib": "tsc -w --project src",
-    "watch": "npm-run-all -p watch:*"
-  },
-  "keywords": [
-    "jupyter",
-    "widgets"
-  ],
-  "jupyterlab": {
-    "extension": "lib/plugin",
-    "singletonPackages": ["@jupyter-widgets/base"]
+    "watch:nbextension": "webpack --watch"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.0.1"
+    "@jupyter-widgets/base": "^1.0.1",
+    "sort-package-json": "^1.7.1"
   },
   "devDependencies": {
     "@phosphor/application": "^1.5.0",
@@ -59,15 +68,10 @@
     "typescript": "~2.4.2",
     "webpack": "^3.4.1"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jupyter/ipywidgetexample"
-  },
-  "author": "",
-  "license": "BSD-3-Clause",
-  "bugs": {
-    "url": "https://github.com/jupyter/ipywidgetexample/issues"
-  },
-  "homepage": "https://github.com/jupyter/ipywidgetexample"
-
+  "jupyterlab": {
+    "extension": "lib/plugin",
+    "singletonPackages": [
+      "@jupyter-widgets/base"
+    ]
+  }
 }
