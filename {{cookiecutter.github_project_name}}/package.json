@@ -10,7 +10,7 @@
     "clean": "npm run clean:lib && npm run clean:nbextension",
     "build:nbextension": "webpack",
     "build:lib": "tsc --project src",
-    "build:release": "mkdirp {{ cookiecutter.python_package_name }}/labextension && cd {{ cookiecutter.python_package_name }}/labextension && npm pack ../..",
+    "build:release": "cd {{ cookiecutter.python_package_name }} && mkdirp labextension && cd labextension && npm pack ../..",
     "build": "npm run build:lib && npm run build:nbextension",
     "test": "npm run test:firefox",
     "test:chrome": "karma start --browsers=Chrome tests/karma.conf.js",
