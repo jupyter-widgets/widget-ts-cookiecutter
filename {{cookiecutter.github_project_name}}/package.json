@@ -41,8 +41,7 @@
     "watch:nbextension": "webpack --watch"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.0.1",
-    "sort-package-json": "^1.7.1"
+    "@jupyter-widgets/base": "^1.0.1"
   },
   "devDependencies": {
     "@phosphor/application": "^1.5.0",
