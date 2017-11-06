@@ -39,7 +39,7 @@
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.17",
     "expect.js": "^0.3.1",
-    "fs-extra": "^4.0.2",
+    "fs-extra": "^4.0.2"
     "json-loader": "^0.5.7",
     "karma": "^1.7.0",
     "karma-chrome-launcher": "^2.2.0",
