@@ -50,7 +50,7 @@ package_data = {
 
 data_files = [
     ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}',
-        get_data_files(pjoin(nb_path, '*.js*')))
+        get_data_files(pjoin(nb_path, '*.js*'))),
     ('share/jupyter/lab/extensions', get_data_files(lab_path))
 ]
 
@@ -63,7 +63,6 @@ setup_args = dict(
     cmdclass        = cmdclass,
     packages        = find_packages(),
     package_data    = package_data,
-    include_package_data = True,
     data_files      = data_files,
     author          = '{{ cookiecutter.author_name }}',
     author_email    = '{{ cookiecutter.author_email }}',
@@ -85,7 +84,7 @@ setup_args = dict(
 )
 
 
-setuptools_args = {}
+setuptools_args = dict(include_package_data=True)
 install_requires = setuptools_args['install_requires'] = [
     'ipywidgets>=7.0.0',
 ]
