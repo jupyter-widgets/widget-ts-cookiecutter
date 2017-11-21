@@ -355,6 +355,8 @@ def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', f
                           .format(npm_cmd[0]))
                 return
 
+            npm_cmd[0] = which(npm_cmd[0])
+
             if force or is_stale(node_modules, pjoin(node_package, 'package.json')):
                 log.info('Installing build dependencies with npm.  This may '
                          'take a while...')
