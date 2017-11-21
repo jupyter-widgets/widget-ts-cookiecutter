@@ -168,15 +168,17 @@ def update_package_data(distribution):
     build_py.finalize_options()
 
 
-def create_cmdclass(prerelease_cmds=None):
+def create_cmdclass(prerelease_cmd=None):
     """Create a command class with the given optional prerelease class.
 
     Parameters
     ----------
-    prerelease_cmds: list, optional
-        The list of command names to run before releasing.
+    prerelease_cmd: str, optional
+        The name of the command to run before releasing.  It must be
+        added to the cmdclass afterward.
     """
-    wrapper = functools.partial(wrap_command, prerelease_cmds or [])
+    wrapped = [prerelease_cmd] if prerelease_cmd else []
+    wrapper = functools.partial(wrap_command, wrapped)
     cmdclass = dict(
         build_py=wrapper(build_py, strict=is_repo),
         sdist=wrapper(sdist, strict=True),

@@ -35,7 +35,7 @@ jstargets = [
     os.path.join(here, 'lib', 'plugin.js'),
 ]
 
-cmdclass = create_cmdclass(['jsdeps'])
+cmdclass = create_cmdclass('jsdeps')
 cmdclass['jsdeps'] = combine_commands(
     install_npm(here, build_cmd='build:all'),
     ensure_targets(jstargets),
