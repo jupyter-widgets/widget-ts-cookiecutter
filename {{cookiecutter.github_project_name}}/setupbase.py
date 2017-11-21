@@ -9,20 +9,26 @@ This file originates from the 'jupyter-packaging' package, and
 contains a set of useful utilities for including npm packages
 within a Python package.
 """
-
-import os
 from os.path import join as pjoin
+import io
+import os
+import fnmatch
 import functools
 import pipes
+import shlex
+import subprocess
 import sys
-from glob import glob
-from subprocess import check_call
 
-from setuptools import Command
-from setuptools.command.build_py import build_py
-from setuptools.command.sdist import sdist
-from setuptools.command.develop import develop
-from setuptools.command.bdist_egg import bdist_egg
+
+# BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
+# update it when the contents of directories change.
+if os.path.exists('MANIFEST'): os.remove('MANIFEST')
+
+
+from distutils.core import setup
+from distutils.cmd import Command
+from distutils.command.build_py import build_py
+from distutils.command.sdist import sdist
 from distutils import log
 
 try:
@@ -37,13 +43,13 @@ else:
         return ' '.join(map(pipes.quote, cmd_list))
 
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 # ---------------------------------------------------------------------------
 # Top Level Variables
 # ---------------------------------------------------------------------------
 
-here = os.path.dirname(__file__)
+here = os.path.abspath(os.path.dirname(__file__))
 is_repo = os.path.exists(pjoin(here, '.git'))
 node_modules = pjoin(here, 'node_modules')
 
@@ -59,30 +65,86 @@ if "--skip-npm" in sys.argv:
 else:
     skip_npm = False
 
+
+# For some commands, use setuptools.  Note that we do NOT list install here!
+if 'develop' in sys.argv or any(a.startswith('bdist') for a in sys.argv):
+    import setuptools
+
+
 # ---------------------------------------------------------------------------
 # Public Functions
 # ---------------------------------------------------------------------------
 
 
-def expand_data_files(data_file_patterns):
-    """Expand data file patterns to a valid data_files spec.
+def get_data_files(file_patterns):
+    """Expand file patterns to a list of `data_files` paths.
 
     Parameters
     -----------
-    data_file_patterns: list(tuple)
-        A list of (directory, glob patterns) for the data file locations.
-        The globs themselves do not recurse.
+    file_patterns: list
+        A list of glob patterns for the data file locations.
+        The globs can be recursive if they include a `**`.
+        They should be relative paths from the root directory or
+        absolute paths.
     """
-    data_files = []
-    for (directory, patterns) in data_file_patterns:
-        files = []
-        for p in patterns:
-            files.extend([os.path.relpath(f, here) for f in glob(p)])
-        data_files.append((directory, files))
-    return data_files
+    files = []
+    for pattern in file_patterns:
+        pattern = os.path.relpath(pattern, here)
+        pattern = pjoin(here, pattern)
+        matches = find_files(here, pattern)
+        files.extend([os.path.relpath(f, here) for f in matches])
+    return files
 
 
-def find_packages(top):
+def get_package_data(root, file_patterns=None):
+    """Expand file patterns to a list of `package_data` paths.
+
+    Parameters
+    -----------
+    root: str
+        The relative path to the package root from `here`.
+    file_patterns: list, optional
+        A list of glob patterns for the data file locations.
+        The globs can be recursive if they include a `**`.
+        They should be relative paths from the root or
+        absolute paths.  If not given, all files will be used.
+    """
+    if file_patterns is None:
+        file_patterns = ['*']
+    files = get_data_files([pjoin(root, f) for f in file_patterns])
+    return [os.path.relpath(root, f) for f in files]
+
+
+def get_version(file, name='__version__'):
+    """Get the version of the package from the given file by
+    executing it and extracting the given `name`.
+    """
+    path = os.path.realpath(file)
+    version_ns = {}
+    with io.open(path, encoding="utf8") as f:
+        exec(f.read(), {}, version_ns)
+    return version_ns[name]
+
+
+def ensure_python(specs):
+    """Given a list of range specifiers for python, ensure compatibility.
+    """
+    if not isinstance(specs, (list, tuple)):
+        specs = [specs]
+    v = sys.version_info
+    part = '%s.%s' % (v.major, v.minor)
+    for spec in specs:
+        if part == spec:
+            return
+        try:
+            if eval(part + spec):
+                return
+        except SyntaxError:
+            pass
+    raise ValueError('Python version %s unsupported' % part)
+
+
+def find_packages(top=here):
     """
     Find all of the packages.
     """
@@ -102,36 +164,56 @@ def update_package_data(distribution):
     build_py.finalize_options()
 
 
-def create_cmdclass(wrappers=None):
-    """Create a command class with the given optional wrappers.
+def create_cmdclass(prerelease_cmds=None):
+    """Create a command class with the given optional prerelease class.
 
     Parameters
     ----------
-    wrappers: list(str), optional
-        The cmdclass names to run before running other commands
+    prerelease_cmds: list, optional
+        The list of command names to run before releasing.
     """
-    egg = bdist_egg if 'bdist_egg' in sys.argv else bdist_egg_disabled
-    wrappers = wrappers or []
-    wrapper = functools.partial(wrap_command, wrappers)
+    wrapper = functools.partial(wrap_command, prerelease_cmds or [])
     cmdclass = dict(
         build_py=wrapper(build_py, strict=is_repo),
         sdist=wrapper(sdist, strict=True),
-        bdist_egg=egg,
-        develop=wrapper(develop, strict=True)
     )
     if bdist_wheel:
         cmdclass['bdist_wheel'] = wrapper(bdist_wheel, strict=True)
     return cmdclass
 
 
-def run(cmd, *args, **kwargs):
+def command_for_func(func):
+    """Create a command that calls the given function."""
+
+    class FuncCommand(BaseCommand):
+
+        def run(self):
+            func()
+            update_package_data(self.distribution)
+
+    return FuncCommand
+
+
+def run(cmd, **kwargs):
     """Echo a command before running it.  Defaults to repo as cwd"""
     log.info('> ' + list2cmdline(cmd))
     kwargs.setdefault('cwd', here)
-    kwargs.setdefault('shell', sys.platform == 'win32')
-    if not isinstance(cmd, list):
-        cmd = cmd.split()
-    return check_call(cmd, *args, **kwargs)
+    kwargs.setdefault('shell', os.name == 'nt')
+    kwargs['stdout'] = subprocess.PIPE
+    kwargs['stderr'] = subprocess.STDOUT
+    if not isinstance(cmd, (list, tuple)) and os.name != 'nt':
+        cmd = shlex.split(cmd)
+    proc = None
+    try:
+        proc = subprocess.Popen(cmd, **kwargs)
+        while proc.poll() is None:
+            log.info(proc.stdout.readline().decode('utf-8'))
+    except subprocess.CalledProcessError as e:
+        print(e.output.decode('utf-8'))
+        raise e
+    finally:
+        if proc:
+            proc.wait()
 
 
 def is_stale(target, source):
@@ -384,12 +466,20 @@ def wrap_command(cmds, cls, strict=True):
     return WrappedCommand
 
 
-class bdist_egg_disabled(bdist_egg):
-    """Disabled version of bdist_egg
-    Prevents setup.py install performing setuptools' default easy_install,
-    which it should never ever do.
-    """
+def find_files(directory, pattern='*'):
+    """Find files in a directory matching a pattern, recursive.
 
-    def run(self):
-        sys.exit("Aborting implicit building of eggs. Use `pip install .` " +
-                 " to install from source.")
+    Adapted from https://stackoverflow.com/a/29270022.
+    """
+    if not os.path.exists(directory):
+        raise ValueError("Directory not found {}".format(directory))
+
+    matches = []
+    for root, dirnames, filenames in os.walk(directory):
+        if 'node_modules' in dirnames:
+            dirnames.remove('node_modules')
+        for filename in filenames:
+            full_path = os.path.join(root, filename)
+            if fnmatch.filter([full_path], pattern):
+                matches.append(pjoin(root, filename).replace(os.sep, '/'))
+    return matches

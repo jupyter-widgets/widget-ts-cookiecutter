@@ -5,38 +5,27 @@
 # Distributed under the terms of the Modified BSD License.
 
 from __future__ import print_function
-
-# the name of the project
-name = '{{ cookiecutter.python_package_name }}'
-
-#-----------------------------------------------------------------------------
-# Minimal Python version sanity check
-#-----------------------------------------------------------------------------
-
+from glob import glob
+from os.path import join as pjoin
+import os
 import sys
 
-v = sys.version_info
-if v[:2] < (3, 3):
-    # Note: 3.3 is untested, but we'll still allow it
-    error = "ERROR: %s requires Python version 3.3 or above." % name
-    print(error, file=sys.stderr)
-    sys.exit(1)
+from setupbase import (
+    create_cmdclass, install_npm, ensure_targets,
+    find_packages, combine_commands, ensure_python,
+    get_version, setup, get_data_files, here, get_package_data
+)
 
-#-----------------------------------------------------------------------------
-# get on with it
-#-----------------------------------------------------------------------------
 
-import io
-import os
-from glob import glob
+# The name of the project
+name = '{{ cookiecutter.python_package_name }}'
 
-from setuptools import setup, find_packages
+# Ensure a valid python version
+ensure_python('>=3.3')
 
-from setupbase import (create_cmdclass, install_npm, ensure_targets,
-    combine_commands, expand_data_files)
+# Get our version
+version = get_version(pjoin(name, '_version.py'))
 
-pjoin = os.path.join
-here = os.path.abspath(os.path.dirname(__file__))
 nb_path = os.path.join(here, name, 'nbextension', 'static')
 lab_path = os.path.join(here, name, 'labextension', '*.tgz')
 
@@ -46,38 +35,33 @@ jstargets = [
     os.path.join(here, 'lib', 'plugin.js'),
 ]
 
-version_ns = {}
-with io.open(pjoin(here, name, '_version.py'), encoding="utf8") as f:
-    exec(f.read(), {}, version_ns)
-
-
-cmdclass = create_cmdclass(('jsdeps',))
+cmdclass = create_cmdclass(['jsdeps'])
 cmdclass['jsdeps'] = combine_commands(
     install_npm(here, build_cmd='build:all'),
     ensure_targets(jstargets),
 )
 
-
 package_data = {
-    name: [
+    name: get_package_data(name, [
         'nbextension/static/*.*js*',
         'labextension/*.tgz'
-    ]
+    ])
 }
 
-data_files = expand_data_files([
-    ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}', [pjoin(nb_path, '*.js*')]),
-    ('share/jupyter/lab/extensions', [lab_path])
-])
+data_files = [
+    ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}',
+        get_data_files(pjoin(nb_path, '*.js*')))
+    ('share/jupyter/lab/extensions', get_data_files([lab_path]))
+]
 
 
 setup_args = dict(
     name            = name,
     description     = '{{ cookiecutter.project_short_description }}',
-    version         = version_ns['__version__'],
+    version         = version,
     scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
-    packages        = find_packages(here),
+    packages        = find_packages(),
     package_data    = package_data,
     include_package_data = True,
     data_files      = data_files,
