@@ -81,12 +81,14 @@ def get_data_files(file_patterns):
 
     Parameters
     -----------
-    file_patterns: list
+    file_patterns: list or str
         A list of glob patterns for the data file locations.
         The globs can be recursive if they include a `**`.
         They should be relative paths from the root directory or
         absolute paths.
     """
+    if not isinstance(file_patterns, (list, tuple)):
+        file_patterns = [file_patterns]
     files = []
     for pattern in file_patterns:
         pattern = os.path.relpath(pattern, here)
@@ -103,7 +105,7 @@ def get_package_data(root, file_patterns=None):
     -----------
     root: str
         The relative path to the package root from `here`.
-    file_patterns: list, optional
+    file_patterns: list or str, optional
         A list of glob patterns for the data file locations.
         The globs can be recursive if they include a `**`.
         They should be relative paths from the root or
@@ -111,6 +113,8 @@ def get_package_data(root, file_patterns=None):
     """
     if file_patterns is None:
         file_patterns = ['*']
+    if not isinstance(file_patterns, (list, tuple)):
+        file_patterns = [file_patterns]
     files = get_data_files([pjoin(root, f) for f in file_patterns])
     return [os.path.relpath(root, f) for f in files]
 

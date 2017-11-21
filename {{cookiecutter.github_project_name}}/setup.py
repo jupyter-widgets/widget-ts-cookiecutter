@@ -51,7 +51,7 @@ package_data = {
 data_files = [
     ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}',
         get_data_files(pjoin(nb_path, '*.js*')))
-    ('share/jupyter/lab/extensions', get_data_files([lab_path]))
+    ('share/jupyter/lab/extensions', get_data_files(lab_path))
 ]
 
 
