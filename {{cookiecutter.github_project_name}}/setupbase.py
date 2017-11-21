@@ -177,14 +177,18 @@ def create_cmdclass(prerelease_cmd=None):
         The name of the command to run before releasing.  It must be
         added to the cmdclass afterward.
     """
+
     wrapped = [prerelease_cmd] if prerelease_cmd else []
     wrapper = functools.partial(wrap_command, wrapped)
     cmdclass = dict(
         build_py=wrapper(build_py, strict=is_repo),
-        sdist=wrapper(sdist, strict=True),
+        sdist=wrapper(sdist, strict=True)
     )
     if bdist_wheel:
         cmdclass['bdist_wheel'] = wrapper(bdist_wheel, strict=True)
+    if 'develop' in sys.argv:
+        from setuptools.command.develop import develop
+        cmdclass['develop'] = wrapper(develop, strict=True)
     return cmdclass
 
 
@@ -205,21 +209,9 @@ def run(cmd, **kwargs):
     log.info('> ' + list2cmdline(cmd))
     kwargs.setdefault('cwd', here)
     kwargs.setdefault('shell', os.name == 'nt')
-    kwargs['stdout'] = subprocess.PIPE
-    kwargs['stderr'] = subprocess.STDOUT
     if not isinstance(cmd, (list, tuple)) and os.name != 'nt':
         cmd = shlex.split(cmd)
-    proc = None
-    try:
-        proc = subprocess.Popen(cmd, **kwargs)
-        while proc.poll() is None:
-            log.info(proc.stdout.readline().decode('utf-8'))
-    except subprocess.CalledProcessError as e:
-        print(e.output.decode('utf-8'))
-        raise e
-    finally:
-        if proc:
-            proc.wait()
+    return subprocess.check_call(cmd, **kwargs)
 
 
 def is_stale(target, source):
@@ -318,7 +310,7 @@ def mtime(path):
     return os.stat(path).st_mtime
 
 
-def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', force=False):
+def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', force=False, npm=None):
     """Return a Command for managing an npm installation.
 
     Note: The command is skipped if the `--skip-npm` flag is used.
@@ -334,6 +326,8 @@ def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', f
         The source code directory.
     build_cmd: str, optional
         The npm command to build assets to the build_dir.
+    npm: str or list, optional.
+        The npm executable name, or a tuple of ['node', executable].
     """
 
     class NPM(BaseCommand):
@@ -345,21 +339,32 @@ def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', f
                 return
             node_package = path or here
             node_modules = pjoin(node_package, 'node_modules')
+            is_yarn = os.path.exists(pjoin(node_package, 'yarn.lock'))
 
-            if not which("npm"):
-                log.error("`npm` unavailable.  If you're running this command "
-                          "using sudo, make sure `npm` is availble to sudo")
+            npm_cmd = npm
+
+            if npm is None:
+                if is_yarn:
+                    npm_cmd = ['yarn']
+                else:
+                    npm_cmd = ['npm']
+
+            if not which(npm_cmd[0]):
+                log.error("`{0}` unavailable.  If you're running this command "
+                          "using sudo, make sure `{0}` is availble to sudo"
+                          .format(npm_cmd[0]))
                 return
+
             if force or is_stale(node_modules, pjoin(node_package, 'package.json')):
                 log.info('Installing build dependencies with npm.  This may '
                          'take a while...')
-                run(['npm', 'install'], cwd=node_package)
+                run(npm_cmd + ['install'], cwd=node_package)
             if build_dir and source_dir and not force:
                 should_build = is_stale(build_dir, source_dir)
             else:
                 should_build = True
             if should_build:
-                run(['npm', 'run', build_cmd], cwd=node_package)
+                run(npm_cmd + ['run', build_cmd], cwd=node_package)
 
     return NPM
 
