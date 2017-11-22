@@ -49,12 +49,12 @@ __version__ = '0.2.0'
 # Top Level Variables
 # ---------------------------------------------------------------------------
 
-here = os.path.abspath(os.path.dirname(__file__))
-is_repo = os.path.exists(pjoin(here, '.git'))
-node_modules = pjoin(here, 'node_modules')
+HERE = os.path.abspath(os.path.dirname(__file__))
+is_repo = os.path.exists(pjoin(HERE, '.git'))
+node_modules = pjoin(HERE, 'node_modules')
 
 npm_path = ':'.join([
-    pjoin(here, 'node_modules', '.bin'),
+    pjoin(HERE, 'node_modules', '.bin'),
     os.environ.get('PATH', os.defpath),
 ])
 
@@ -86,15 +86,27 @@ def get_data_files(file_patterns):
         The globs can be recursive if they include a `**`.
         They should be relative paths from the root directory or
         absolute paths.
+
+    Note:
+    Files in `node_modules` are ignored.
     """
     if not isinstance(file_patterns, (list, tuple)):
         file_patterns = [file_patterns]
     files = []
     for pattern in file_patterns:
-        pattern = os.path.relpath(pattern, here)
-        pattern = pjoin(here, pattern)
-        matches = find_files(here, pattern)
-        files.extend([os.path.relpath(f, here) for f in matches])
+        pattern = os.path.relpath(pattern, HERE)
+        pattern = pjoin(HERE, pattern)
+        if '**' in pattern:
+            matches = []
+            base, _, rest = pattern.partition('**')
+            for root, dirnames, _ in os.walk(base):
+                # Don't recurse into node_modules
+                if 'node_modules' in dirnames:
+                    dirnames.remove('node_modules')
+                matches.extend(find_files(pjoin(root, rest)))
+        else:
+            matches = find_files(HERE, pattern)
+        files.extend([os.path.relpath(f, HERE) for f in matches])
     return files
 
 
@@ -104,19 +116,22 @@ def get_package_data(root, file_patterns=None):
     Parameters
     -----------
     root: str
-        The relative path to the package root from `here`.
+        The relative path to the package root from `HERE`.
     file_patterns: list or str, optional
         A list of glob patterns for the data file locations.
         The globs can be recursive if they include a `**`.
         They should be relative paths from the root or
         absolute paths.  If not given, all files will be used.
+
+    Note:
+    Files in `node_modules` are ignored.
     """
     if file_patterns is None:
         file_patterns = ['*']
     if not isinstance(file_patterns, (list, tuple)):
         file_patterns = [file_patterns]
     files = get_data_files([pjoin(root, f) for f in file_patterns])
-    return [os.path.relpath(root, f) for f in files]
+    return [os.path.relpath(f, root) for f in files]
 
 
 def get_version(file, name='__version__'):
@@ -148,7 +163,7 @@ def ensure_python(specs):
     raise ValueError('Python version %s unsupported' % part)
 
 
-def find_packages(top=here):
+def find_packages(top=HERE):
     """
     Find all of the packages.
     """
@@ -207,10 +222,11 @@ def command_for_func(func):
 def run(cmd, **kwargs):
     """Echo a command before running it.  Defaults to repo as cwd"""
     log.info('> ' + list2cmdline(cmd))
-    kwargs.setdefault('cwd', here)
+    kwargs.setdefault('cwd', HERE)
     kwargs.setdefault('shell', os.name == 'nt')
     if not isinstance(cmd, (list, tuple)) and os.name != 'nt':
         cmd = shlex.split(cmd)
+    cmd[0] = which(cmd[0])
     return subprocess.check_call(cmd, **kwargs)
 
 
@@ -294,7 +310,10 @@ def recursive_mtime(path, newest=True):
     if os.path.isfile(path):
         return mtime(path)
     current_extreme = None
-    for dirname, _, filenames in os.walk(path, topdown=False):
+    for dirname, dirnames, filenames in os.walk(path, topdown=False):
+        # Don't recurse into node_modules
+        if 'node_modules' in dirnames:
+            dirnames.remove('node_modules')
         for filename in filenames:
             mt = mtime(pjoin(dirname, filename))
             if newest:  # Put outside of loop?
@@ -337,7 +356,7 @@ def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', f
             if skip_npm:
                 log.info('Skipping npm-installation')
                 return
-            node_package = path or here
+            node_package = path or HERE
             node_modules = pjoin(node_package, 'node_modules')
             is_yarn = os.path.exists(pjoin(node_package, 'yarn.lock'))
 
@@ -354,8 +373,6 @@ def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', f
                           "using sudo, make sure `{0}` is availble to sudo"
                           .format(npm_cmd[0]))
                 return
-
-            npm_cmd[0] = which(npm_cmd[0])
 
             if force or is_stale(node_modules, pjoin(node_package, 'package.json')):
                 log.info('Installing build dependencies with npm.  This may '
