@@ -88,7 +88,8 @@ def get_data_files(file_patterns):
         absolute paths.
 
     Note:
-    Files in `node_modules` are ignored.
+    Files in `node_modules` are ignored.  Only handles a single
+    '**' in the pattern.
     """
     if not isinstance(file_patterns, (list, tuple)):
         file_patterns = [file_patterns]
@@ -99,11 +100,12 @@ def get_data_files(file_patterns):
         if '**' in pattern:
             matches = []
             base, _, rest = pattern.partition('**')
+            rest = rest or '*'
             for root, dirnames, _ in os.walk(base):
                 # Don't recurse into node_modules
                 if 'node_modules' in dirnames:
                     dirnames.remove('node_modules')
-                matches.extend(find_files(pjoin(root, rest)))
+                matches.extend(find_files(root, pjoin(root, rest)))
         else:
             matches = find_files(HERE, pattern)
         files.extend([os.path.relpath(f, HERE) for f in matches])
@@ -124,7 +126,8 @@ def get_package_data(root, file_patterns=None):
         absolute paths.  If not given, all files will be used.
 
     Note:
-    Files in `node_modules` are ignored.
+    Files in `node_modules` are ignored.  Only handles a single
+    '**' in the pattern.
     """
     if file_patterns is None:
         file_patterns = ['*']
@@ -510,6 +513,8 @@ def find_files(directory, pattern='*'):
             dirnames.remove('node_modules')
         for filename in filenames:
             full_path = os.path.join(root, filename)
+            if len(full_path.split(os.sep)) != len(pattern.split(os.sep)):
+                continue
             if fnmatch.filter([full_path], pattern):
                 matches.append(pjoin(root, filename).replace(os.sep, '/'))
     return matches
