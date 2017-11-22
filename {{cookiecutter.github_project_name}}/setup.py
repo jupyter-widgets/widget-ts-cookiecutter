@@ -13,7 +13,7 @@ import sys
 from setupbase import (
     create_cmdclass, install_npm, ensure_targets,
     find_packages, combine_commands, ensure_python,
-    get_version, setup, get_data_files, here, get_package_data
+    get_version, setup, get_data_files, HERE, get_package_data
 )
 
 
@@ -26,18 +26,18 @@ ensure_python('>=3.3')
 # Get our version
 version = get_version(pjoin(name, '_version.py'))
 
-nb_path = os.path.join(here, name, 'nbextension', 'static')
-lab_path = os.path.join(here, name, 'labextension', '*.tgz')
+nb_path = os.path.join(HERE, name, 'nbextension', 'static')
+lab_path = os.path.join(HERE, name, 'labextension', '*.tgz')
 
 # Representative files that should exist after a successful build
 jstargets = [
     os.path.join(nb_path, 'extension.js'),
-    os.path.join(here, 'lib', 'plugin.js'),
+    os.path.join(HERE, 'lib', 'plugin.js'),
 ]
 
 cmdclass = create_cmdclass('jsdeps')
 cmdclass['jsdeps'] = combine_commands(
-    install_npm(here, build_cmd='build:all'),
+    install_npm(HERE, build_cmd='build:all'),
     ensure_targets(jstargets),
 )
 
