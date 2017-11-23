@@ -18,7 +18,7 @@ from setupbase import (
 
 
 # The name of the project
-name = '{{ cookiecutter.python_package_name }}'
+name = 'ipywidgetexample'
 
 # Ensure a valid python version
 ensure_python('>=3.3')
@@ -31,42 +31,41 @@ lab_path = os.path.join(HERE, name, 'labextension', '*.tgz')
 
 # Representative files that should exist after a successful build
 jstargets = [
-    os.path.join(nb_path, 'extension.js'),
     os.path.join(HERE, 'lib', 'plugin.js'),
 ]
 
-cmdclass = create_cmdclass('jsdeps')
+package_data_spec = {
+    name: [
+        'nbextension/static/*.*js*',
+        'labextension/*.tgz'
+    ]
+}
+
+data_files_spec = [
+    ('share/jupyter/nbextensions/jupyter-widget-example',
+        pjoin(nb_path, '*.js*')),
+    ('share/jupyter/lab/extensions', lab_path)
+]
+
+
+cmdclass = create_cmdclass('jsdeps', package_data_spec=package_data_spec,
+    data_files_spec=data_files_spec)
 cmdclass['jsdeps'] = combine_commands(
     install_npm(HERE, build_cmd='build:all'),
     ensure_targets(jstargets),
 )
 
-package_data = {
-    name: get_package_data(name, [
-        'nbextension/static/*.*js*',
-        'labextension/*.tgz'
-    ])
-}
-
-data_files = [
-    ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}',
-        get_data_files(pjoin(nb_path, '*.js*'))),
-    ('share/jupyter/lab/extensions', get_data_files(lab_path))
-]
-
 
 setup_args = dict(
     name            = name,
-    description     = '{{ cookiecutter.project_short_description }}',
+    description     = 'A Custom Jupyter Widget Library',
     version         = version,
     scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
     packages        = find_packages(),
-    package_data    = package_data,
-    data_files      = data_files,
-    author          = '{{ cookiecutter.author_name }}',
-    author_email    = '{{ cookiecutter.author_email }}',
-    url             = 'https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}',
+    author          = '',
+    author_email    = '',
+    url             = 'https://github.com/jupyter/ipywidgetexample',
     license         = 'BSD',
     platforms       = "Linux, Mac OS X, Windows",
     keywords        = ['Jupyter', 'Widgets', 'IPython'],

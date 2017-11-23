@@ -29,6 +29,7 @@ from distutils.core import setup
 from distutils.cmd import Command
 from distutils.command.build_py import build_py
 from distutils.command.sdist import sdist
+from distutils.dist import Distribution
 from distutils import log
 
 try:
@@ -74,68 +75,6 @@ if 'develop' in sys.argv or any(a.startswith('bdist') for a in sys.argv):
 # ---------------------------------------------------------------------------
 # Public Functions
 # ---------------------------------------------------------------------------
-
-
-def get_data_files(file_patterns):
-    """Expand file patterns to a list of `data_files` paths.
-
-    Parameters
-    -----------
-    file_patterns: list or str
-        A list of glob patterns for the data file locations.
-        The globs can be recursive if they include a `**`.
-        They should be relative paths from the root directory or
-        absolute paths.
-
-    Note:
-    Files in `node_modules` are ignored.  Only handles a single
-    '**' in the pattern.
-    """
-    if not isinstance(file_patterns, (list, tuple)):
-        file_patterns = [file_patterns]
-    files = []
-    for pattern in file_patterns:
-        pattern = os.path.relpath(pattern, HERE)
-        pattern = pjoin(HERE, pattern)
-        if '**' in pattern:
-            matches = []
-            base, _, rest = pattern.partition('**')
-            rest = rest or '*'
-            for root, dirnames, _ in os.walk(base):
-                # Don't recurse into node_modules
-                if 'node_modules' in dirnames:
-                    dirnames.remove('node_modules')
-                matches.extend(find_files(root, pjoin(root, rest)))
-        else:
-            matches = find_files(HERE, pattern)
-        files.extend([os.path.relpath(f, HERE) for f in matches])
-    return files
-
-
-def get_package_data(root, file_patterns=None):
-    """Expand file patterns to a list of `package_data` paths.
-
-    Parameters
-    -----------
-    root: str
-        The relative path to the package root from `HERE`.
-    file_patterns: list or str, optional
-        A list of glob patterns for the data file locations.
-        The globs can be recursive if they include a `**`.
-        They should be relative paths from the root or
-        absolute paths.  If not given, all files will be used.
-
-    Note:
-    Files in `node_modules` are ignored.  Only handles a single
-    '**' in the pattern.
-    """
-    if file_patterns is None:
-        file_patterns = ['*']
-    if not isinstance(file_patterns, (list, tuple)):
-        file_patterns = [file_patterns]
-    files = get_data_files([pjoin(root, f) for f in file_patterns])
-    return [os.path.relpath(f, root) for f in files]
-
 
 def get_version(file, name='__version__'):
     """Get the version of the package from the given file by
@@ -186,24 +125,42 @@ def update_package_data(distribution):
     build_py.finalize_options()
 
 
-def create_cmdclass(prerelease_cmd=None):
+def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
+        data_files_spec=None):
     """Create a command class with the given optional prerelease class.
 
     Parameters
     ----------
-    prerelease_cmd: str, optional
-        The name of the command to run before releasing.  It must be
-        added to the cmdclass afterward.
-    """
+    prerelease_cmd: (name, Command) tuple, optional
+        The command to run before releasing.
+    package_data_spec: dict, optional
+        A dictionary whose keys are the dotted package names and
+        whose values are a list of glob patterns.
+    data_files_spec: list, optional
+        A list of (path, patterns) tuples where the path is the
+        `data_files` install path and the patterns are glob patterns.
 
+    Notes
+    -----
+    We use specs so that we can find the files *after* the build
+    command has run.
+    The glob patterns can contain at most one '**' per pattern.
+    """
     wrapped = [prerelease_cmd] if prerelease_cmd else []
-    wrapper = functools.partial(wrap_command, wrapped)
+    if package_data_spec or data_files_spec:
+        wrapped.append('handle_files')
+    wrapper = functools.partial(_wrap_command, wrapped)
+    handle_files = _get_file_handler(package_data_spec, data_files_spec)
+
     cmdclass = dict(
         build_py=wrapper(build_py, strict=is_repo),
-        sdist=wrapper(sdist, strict=True)
+        sdist=wrapper(sdist, strict=True),
+        handle_files=handle_files
     )
+
     if bdist_wheel:
         cmdclass['bdist_wheel'] = wrapper(bdist_wheel, strict=True)
+
     if 'develop' in sys.argv:
         from setuptools.command.develop import develop
         cmdclass['develop'] = wrapper(develop, strict=True)
@@ -470,7 +427,7 @@ def which(cmd, mode=os.F_OK | os.X_OK, path=None):
 # ---------------------------------------------------------------------------
 
 
-def wrap_command(cmds, cls, strict=True):
+def _wrap_command(cmds, cls, strict=True):
     """Wrap a setup command
 
     Parameters
@@ -499,7 +456,90 @@ def wrap_command(cmds, cls, strict=True):
     return WrappedCommand
 
 
-def find_files(directory, pattern='*'):
+def _get_file_handler(package_data_spec, data_files_spec):
+    """Get a package_data and data_files handler command.
+    """
+    class FileHandler(BaseCommand):
+
+        def run(self):
+            package_data = self.distribution.package_data
+            package_spec = package_data_spec or dict()
+            data_spec = data_files_spec or []
+
+            for (key, patterns) in package_spec.items():
+                package_data[key] = _get_package_data(key, patterns)
+
+            data_files = self.distribution.data_files or []
+            for (path, patterns) in data_spec:
+                data_files.append((path, _get_data_files(patterns)))
+
+            self.distribution.data_files = data_files
+
+    return FileHandler
+
+
+def _get_data_files(file_patterns):
+    """Expand file patterns to a list of `data_files` paths.
+
+    Parameters
+    -----------
+    file_patterns: list or str
+        A list of glob patterns for the data file locations.
+        The globs can be recursive if they include a `**`.
+        They should be relative paths from the root directory or
+        absolute paths.
+
+    Note:
+    Files in `node_modules` are ignored.  Only handles a single
+    '**' in the pattern.
+    """
+    if not isinstance(file_patterns, (list, tuple)):
+        file_patterns = [file_patterns]
+    files = []
+    for pattern in file_patterns:
+        pattern = os.path.relpath(pattern, HERE)
+        pattern = pjoin(HERE, pattern)
+        if '**' in pattern:
+            matches = []
+            base, _, rest = pattern.partition('**')
+            rest = rest or '*'
+            for root, dirnames, _ in os.walk(base):
+                # Don't recurse into node_modules
+                if 'node_modules' in dirnames:
+                    dirnames.remove('node_modules')
+                matches.extend(_find_files(root, pjoin(root, rest)))
+        else:
+            matches = _find_files(HERE, pattern)
+        files.extend([os.path.relpath(f, HERE) for f in matches])
+    return files
+
+
+def _get_package_data(root, file_patterns=None):
+    """Expand file patterns to a list of `package_data` paths.
+
+    Parameters
+    -----------
+    root: str
+        The relative path to the package root from `HERE`.
+    file_patterns: list or str, optional
+        A list of glob patterns for the data file locations.
+        The globs can be recursive if they include a `**`.
+        They should be relative paths from the root or
+        absolute paths.  If not given, all files will be used.
+
+    Note:
+    Files in `node_modules` are ignored.  Only handles a single
+    '**' in the pattern.
+    """
+    if file_patterns is None:
+        file_patterns = ['*']
+    if not isinstance(file_patterns, (list, tuple)):
+        file_patterns = [file_patterns]
+    files = _get_data_files([pjoin(root, f) for f in file_patterns])
+    return [os.path.relpath(f, root) for f in files]
+
+
+def _find_files(directory, pattern='*'):
     """Find files in a directory matching a pattern, recursive.
 
     Adapted from https://stackoverflow.com/a/29270022.
