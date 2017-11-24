@@ -7,7 +7,6 @@
 from __future__ import print_function
 from glob import glob
 from os.path import join as pjoin
-import os
 import sys
 
 from setupbase import (
