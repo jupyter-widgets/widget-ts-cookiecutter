@@ -474,45 +474,50 @@ def _get_file_handler(package_data_spec, data_files_spec):
 
             data_files = self.distribution.data_files or []
             for (path, patterns) in data_spec:
-                data_files.append((path, _get_data_files(patterns)))
+                data_files.append((path, _get_files(patterns)))
 
             self.distribution.data_files = data_files
 
     return FileHandler
 
 
-def _get_data_files(file_patterns, top=HERE):
-    """Expand file patterns to a list of `data_files` paths.
+def _get_files(file_patterns, top=HERE):
+    """Expand file patterns to a list of paths.
 
     Parameters
     -----------
     file_patterns: list or str
         A list of glob patterns for the data file locations.
         The globs can be recursive if they include a `**`.
-        They should be relative paths from the root directory or
+        They should be relative paths from the top directory or
         absolute paths.
+    top: str
+        the directory to consider for data files
 
     Note:
-    Files in `node_modules` are ignored.  Only handles a single
-    '**' in the pattern.
+    Files in `node_modules` are ignored.
     """
     if not isinstance(file_patterns, (list, tuple)):
         file_patterns = [file_patterns]
 
+    for i, p in enumerate(file_patterns):
+        if os.path.isabs(p):
+            file_patterns[i] = os.path.relpath(p, top)
+
     matchers = [_compile_pattern(p) for p in file_patterns]
 
-    files = []
+    files = set()
     for root, dirnames, filenames in os.walk(top):
         # Don't recurse into node_modules
         if 'node_modules' in dirnames:
             dirnames.remove('node_modules')
         for m in matchers:
             for filename in filenames:
-                fn = pjoin(root, filename)
+                fn = os.path.relpath(pjoin(root, filename), top)
                 if m(fn):
-                    files.append(fn.replace(os.sep, '/'))
+                    files.add(fn.replace(os.sep, '/'))
 
-    return files
+    return list(files)
 
 
 def _get_package_data(root, file_patterns=None):
@@ -529,14 +534,13 @@ def _get_package_data(root, file_patterns=None):
         absolute paths.  If not given, all files will be used.
 
     Note:
-    Files in `node_modules` are ignored.  Only handles a single
-    '**' in the pattern.
+    Files in `node_modules` are ignored.
     """
     if file_patterns is None:
         file_patterns = ['*']
     if not isinstance(file_patterns, (list, tuple)):
         file_patterns = [file_patterns]
-    files = _get_data_files(file_patterns, pjoin(HERE, root))
+    files = _get_files(file_patterns, pjoin(HERE, root))
     return [pjoin(root, f) for f in files]
 
 
