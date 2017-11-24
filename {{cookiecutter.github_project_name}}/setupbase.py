@@ -15,6 +15,7 @@ import os
 import fnmatch
 import functools
 import pipes
+import re
 import shlex
 import subprocess
 import sys
@@ -53,6 +54,8 @@ __version__ = '0.2.0'
 HERE = os.path.abspath(os.path.dirname(__file__))
 is_repo = os.path.exists(pjoin(HERE, '.git'))
 node_modules = pjoin(HERE, 'node_modules')
+
+SEPARATORS = os.sep if os.altsep is None else os.sep + os.altsep
 
 npm_path = ':'.join([
     pjoin(HERE, 'node_modules', '.bin'),
@@ -478,7 +481,7 @@ def _get_file_handler(package_data_spec, data_files_spec):
     return FileHandler
 
 
-def _get_data_files(file_patterns):
+def _get_data_files(file_patterns, top=HERE):
     """Expand file patterns to a list of `data_files` paths.
 
     Parameters
@@ -495,22 +498,20 @@ def _get_data_files(file_patterns):
     """
     if not isinstance(file_patterns, (list, tuple)):
         file_patterns = [file_patterns]
+
+    matchers = [_compile_pattern(p) for p in file_patterns]
+
     files = []
-    for pattern in file_patterns:
-        pattern = os.path.relpath(pattern, HERE)
-        pattern = pjoin(HERE, pattern)
-        if '**' in pattern:
-            matches = []
-            base, _, rest = pattern.partition('**')
-            rest = rest or '*'
-            for root, dirnames, _ in os.walk(base):
-                # Don't recurse into node_modules
-                if 'node_modules' in dirnames:
-                    dirnames.remove('node_modules')
-                matches.extend(_find_files(root, pjoin(root, rest)))
-        else:
-            matches = _find_files(HERE, pattern)
-        files.extend([os.path.relpath(f, HERE) for f in matches])
+    for root, dirnames, filenames in os.walk(top):
+        # Don't recurse into node_modules
+        if 'node_modules' in dirnames:
+            dirnames.remove('node_modules')
+        for m in matchers:
+            for filename in filenames:
+                fn = pjoin(root, filename)
+                if m(fn):
+                    files.append(fn.replace(os.sep, '/'))
+
     return files
 
 
@@ -535,26 +536,111 @@ def _get_package_data(root, file_patterns=None):
         file_patterns = ['*']
     if not isinstance(file_patterns, (list, tuple)):
         file_patterns = [file_patterns]
-    files = _get_data_files([pjoin(root, f) for f in file_patterns])
-    return [os.path.relpath(f, root) for f in files]
+    files = _get_data_files(file_patterns, pjoin(HERE, root))
+    return [pjoin(root, f) for f in files]
 
 
-def _find_files(directory, pattern='*'):
-    """Find files in a directory matching a pattern, recursive.
 
-    Adapted from https://stackoverflow.com/a/29270022.
+
+
+def _compile_pattern(pat, ignore_case=True):
+    """Translate and compile a glob pattern to a regular expression matcher."""
+    if isinstance(pat, bytes):
+        pat_str = pat.decode('ISO-8859-1')
+        res_str = _translate_glob(pat_str)
+        res = res_str.encode('ISO-8859-1')
+    else:
+        res = _translate_glob(pat)
+    flags = re.IGNORECASE if ignore_case else 0
+    return re.compile(res, flags=flags).match
+
+
+def _iexplode_path(path):
+    """Iterate over all the parts of a path.
+
+    Splits path recursively with os.path.split().
     """
-    if not os.path.exists(directory):
-        raise ValueError("Directory not found {}".format(directory))
+    (head, tail) = os.path.split(path)
+    if not head or (not tail and head == path):
+        if head:
+            yield head
+        if tail or not head:
+            yield tail
+        return
+    for p in _iexplode_path(head):
+        yield p
+    yield tail
 
-    matches = []
-    for root, dirnames, filenames in os.walk(directory):
-        if 'node_modules' in dirnames:
-            dirnames.remove('node_modules')
-        for filename in filenames:
-            full_path = os.path.join(root, filename)
-            if len(full_path.split(os.sep)) != len(pattern.split(os.sep)):
-                continue
-            if fnmatch.filter([full_path], pattern):
-                matches.append(pjoin(root, filename).replace(os.sep, '/'))
-    return matches
+
+def _translate_glob(pat):
+    """Translate a glob PATTERN to a regular expression."""
+    translated_parts = []
+    for part in _iexplode_path(pat):
+        translated_parts.append(_translate_glob_part(part))
+    os_sep_class = '[%s]' % re.escape(SEPARATORS)
+    res = _join_translated(translated_parts, os_sep_class)
+    res = '{res}({os_sep_class}?.*)?\\Z(?ms)'.format(res=res, os_sep_class=os_sep_class)
+    return res
+
+
+def _join_translated(translated_parts, os_sep_class):
+    """Join translated glob pattern parts.
+
+    This is different from a simple join, as care need to be taken
+    to allow ** to match ZERO or more directories.
+    """
+    if len(translated_parts) < 2:
+        return translated_parts[0]
+
+    res = ''
+    for part in translated_parts[:-1]:
+        if part == '.*':
+            # drop separator, since it is optional
+            # (** matches ZERO or more dirs)
+            res += part
+        else:
+            res += part + os_sep_class
+    if translated_parts[-1] == '.*':
+        # Final part is **, undefined behavior since we don't check against filesystem
+        res += translated_parts[-1]
+    else:
+        res += translated_parts[-1]
+    return res
+
+
+def _translate_glob_part(pat):
+    """Translate a glob PATTERN PART to a regular expression."""
+    # Code modified from Python 3 standard lib fnmatch:
+    if pat == '**':
+        return '.*'
+    i, n = 0, len(pat)
+    res = []
+    while i < n:
+        c = pat[i]
+        i = i+1
+        if c == '*':
+            # Match anything but path separators:
+            res.append('[^%s]*' % SEPARATORS)
+        elif c == '?':
+            res.append('[^%s]?' % SEPARATORS)
+        elif c == '[':
+            j = i
+            if j < n and pat[j] == '!':
+                j = j+1
+            if j < n and pat[j] == ']':
+                j = j+1
+            while j < n and pat[j] != ']':
+                j = j+1
+            if j >= n:
+                res.append('\\[')
+            else:
+                stuff = pat[i:j].replace('\\', '\\\\')
+                i = j+1
+                if stuff[0] == '!':
+                    stuff = '^' + stuff[1:]
+                elif stuff[0] == '^':
+                    stuff = '\\' + stuff
+                res.append('[%s]' % stuff)
+        else:
+            res.append(re.escape(c))
+    return ''.join(res)
