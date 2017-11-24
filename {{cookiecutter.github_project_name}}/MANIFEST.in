@@ -6,6 +6,7 @@ include pytest.ini
 include .coverage.rc
 
 include package.json
+include webpack.config.js
 include {{ cookiecutter.python_package_name }}/labextension/*.tgz
 
 # Documentation
@@ -18,14 +19,16 @@ prune docs/dist
 # Examples
 graft examples
 
+# Tests
+graft tests
+prune tests/build
+
 # Javascript files
 graft {{ cookiecutter.python_package_name }}/nbextension
-graft packages
-prune packages/**/node_modules
-prune packages/**/coverage
-prune packages/**/node_modules
-prune packages/**/lib
-prune packages/**/test/build
+graft src
+prune **/node_modules
+prune coverage
+prune lib
 
 # Patterns to exclude from any directory
 global-exclude *~
