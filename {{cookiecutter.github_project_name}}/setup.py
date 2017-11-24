@@ -26,12 +26,13 @@ ensure_python('>=3.3')
 # Get our version
 version = get_version(pjoin(name, '_version.py'))
 
-nb_path = os.path.join(HERE, name, 'nbextension', 'static')
-lab_path = os.path.join(HERE, name, 'labextension', '*.tgz')
+nb_path = pjoin(HERE, name, 'nbextension', 'static')
+lab_path = pjoin(HERE, name, 'labextension', '*.tgz')
 
 # Representative files that should exist after a successful build
 jstargets = [
-    os.path.join(HERE, 'lib', 'plugin.js'),
+    pjoin(nb_path, 'index.js'),
+    pjoin(HERE, 'lib', 'plugin.js'),
 ]
 
 package_data_spec = {
