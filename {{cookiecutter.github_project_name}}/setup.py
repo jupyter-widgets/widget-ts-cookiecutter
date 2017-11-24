@@ -13,7 +13,7 @@ import sys
 from setupbase import (
     create_cmdclass, install_npm, ensure_targets,
     find_packages, combine_commands, ensure_python,
-    get_version, setup, get_data_files, HERE, get_package_data
+    get_version, setup, HERE
 )
 
 
