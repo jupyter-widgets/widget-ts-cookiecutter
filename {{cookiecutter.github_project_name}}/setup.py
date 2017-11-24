@@ -18,7 +18,7 @@ from setupbase import (
 
 
 # The name of the project
-name = 'ipywidgetexample'
+name = '{{ cookiecutter.python_package_name }}'
 
 # Ensure a valid python version
 ensure_python('>=3.3')
@@ -42,7 +42,7 @@ package_data_spec = {
 }
 
 data_files_spec = [
-    ('share/jupyter/nbextensions/jupyter-widget-example',
+    ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}',
         pjoin(nb_path, '*.js*')),
     ('share/jupyter/lab/extensions', lab_path)
 ]
@@ -58,14 +58,14 @@ cmdclass['jsdeps'] = combine_commands(
 
 setup_args = dict(
     name            = name,
-    description     = 'A Custom Jupyter Widget Library',
+    description     = '{{ cookiecutter.project_short_description }}',
     version         = version,
     scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
     packages        = find_packages(),
-    author          = '',
-    author_email    = '',
-    url             = 'https://github.com/jupyter/ipywidgetexample',
+    author          = '{{ cookiecutter.author_name }}',
+    author_email    = '{{ cookiecutter.author_email }}',
+    url             = 'https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.python_package_name }}',
     license         = 'BSD',
     platforms       = "Linux, Mac OS X, Windows",
     keywords        = ['Jupyter', 'Widgets', 'IPython'],
