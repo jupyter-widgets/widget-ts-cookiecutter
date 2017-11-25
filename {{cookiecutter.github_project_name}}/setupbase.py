@@ -507,6 +507,7 @@ def _get_files(file_patterns, top=HERE):
     matchers = [_compile_pattern(p) for p in file_patterns]
 
     files = set()
+
     for root, dirnames, filenames in os.walk(top):
         # Don't recurse into node_modules
         if 'node_modules' in dirnames:
@@ -538,13 +539,7 @@ def _get_package_data(root, file_patterns=None):
     """
     if file_patterns is None:
         file_patterns = ['*']
-    if not isinstance(file_patterns, (list, tuple)):
-        file_patterns = [file_patterns]
-    files = _get_files(file_patterns, pjoin(HERE, root))
-    return [pjoin(root, f) for f in files]
-
-
-
+    return _get_files(file_patterns, pjoin(HERE, root))
 
 
 def _compile_pattern(pat, ignore_case=True):
@@ -583,8 +578,7 @@ def _translate_glob(pat):
         translated_parts.append(_translate_glob_part(part))
     os_sep_class = '[%s]' % re.escape(SEPARATORS)
     res = _join_translated(translated_parts, os_sep_class)
-    res = '{res}({os_sep_class}?.*)?\\Z(?ms)'.format(res=res, os_sep_class=os_sep_class)
-    return res
+    return '{res}\\Z(?ms)'.format(res=res)
 
 
 def _join_translated(translated_parts, os_sep_class):
