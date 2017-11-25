@@ -12,7 +12,6 @@ within a Python package.
 from os.path import join as pjoin
 import io
 import os
-import fnmatch
 import functools
 import pipes
 import re
@@ -148,6 +147,11 @@ def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
     We use specs so that we can find the files *after* the build
     command has run.
     The glob patterns can contain at most one '**' per pattern.
+    The package data glob patterns should be relative paths from the package
+    folder containing the __init__.py file, which is given as the package
+    name.
+    The data files glob patterns should be absolute paths or relative paths
+    from the root directory of the repository.
     """
     wrapped = [prerelease_cmd] if prerelease_cmd else []
     if package_data_spec or data_files_spec:
