@@ -147,11 +147,19 @@ def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
     We use specs so that we can find the files *after* the build
     command has run.
     The glob patterns can contain at most one '**' per pattern.
+
+    We use specs so that we can find the files *after* the build
+    command has run.
+    The glob patterns can contain at most one '**' per pattern.
+
     The package data glob patterns should be relative paths from the package
     folder containing the __init__.py file, which is given as the package
     name.
+    e.g. `dict(foo=['./bar/*', './baz/**'])`
+
     The data files glob patterns should be absolute paths or relative paths
     from the root directory of the repository.
+    e.g. `('share/foo/bar', ['pkgname/bizz/*', 'pkgname/baz/**'])`
     """
     wrapped = [prerelease_cmd] if prerelease_cmd else []
     if package_data_spec or data_files_spec:
@@ -278,9 +286,6 @@ def recursive_mtime(path, newest=True):
         return mtime(path)
     current_extreme = None
     for dirname, dirnames, filenames in os.walk(path, topdown=False):
-        # Don't recurse into node_modules
-        if 'node_modules' in dirnames:
-            dirnames.remove('node_modules')
         for filename in filenames:
             mt = mtime(pjoin(dirname, filename))
             if newest:  # Put outside of loop?
