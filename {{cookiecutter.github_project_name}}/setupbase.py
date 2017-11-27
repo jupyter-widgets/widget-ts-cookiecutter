@@ -602,7 +602,7 @@ def _join_translated(translated_parts, os_sep_class):
 
     if translated_parts[-1] == '.*':
         # Final part is **
-        res += translated_parts[-1]
+        res += '.+'
         # Follow stdlib/git convention of matching all sub files/directories:
         res += '({os_sep_class}?.*)?'.format(os_sep_class=os_sep_class)
     else:
