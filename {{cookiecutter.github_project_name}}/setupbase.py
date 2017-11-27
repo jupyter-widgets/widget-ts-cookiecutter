@@ -146,11 +146,6 @@ def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
     -----
     We use specs so that we can find the files *after* the build
     command has run.
-    The glob patterns can contain at most one '**' per pattern.
-
-    We use specs so that we can find the files *after* the build
-    command has run.
-    The glob patterns can contain at most one '**' per pattern.
 
     The package data glob patterns should be relative paths from the package
     folder containing the __init__.py file, which is given as the package
