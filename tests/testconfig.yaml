@@ -6,6 +6,5 @@ default_context:
     python_package_name: "ipywidgettestwidgets"
     npm_package_name: "jupyter-widget-testwidgets"
     npm_package_version: "1.1.0"
-    jlab_extension_name: "jupyterlab-widget-testwidgets"
     jlab_extension_id: "jupyter.extensions.testwidgets"
     project_short_description: "A Test Jupyter Widget Library"

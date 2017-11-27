@@ -13,7 +13,9 @@ import {
   IJupyterWidgetRegistry
  } from '@jupyter-widgets/base';
 
-import * as WIDGET_EXPORTS from './widget';
+import {
+  ExampleModel, ExampleView
+} from './widget';
 
 import {
   JUPYTER_EXTENSION_VERSION
@@ -43,6 +45,9 @@ function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWid
   registry.registerWidget({
     name: '{{ cookiecutter.npm_package_name }}',
     version: JUPYTER_EXTENSION_VERSION,
-    exports: WIDGET_EXPORTS
+    exports: {
+      ExampleModel: ExampleModel,
+      ExampleView: ExampleView
+    }
   });
 }

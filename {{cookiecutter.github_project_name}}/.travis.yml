@@ -54,9 +54,5 @@ script:
     elif [[ $GROUP == js ]]; then
       npm test
     fi
-before_cache:
-  # Do not cache our own package
-  - |
-    rm -rf packages/{{ cookiecutter.jlab_extension_name }}/node_modules/{{ cookiecutter.npm_package_name }}
 after_success:
     - codecov

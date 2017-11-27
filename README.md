@@ -33,8 +33,6 @@ information:
 - `npm_package_name`: name for the npm "front-end" package holding the JavaScript
   implementation used in your custom widget.
 - `npm_package_version`: initial version of the npm package.
-- `jlab_extension_name`: name for the jupyterlab extension npm package (must be different
-  from `npm_package_name`).
 - `jlab_extension_id`: extension ID to supply to JupyterLab when registering the extension.
   The recommended format is "jupyter.extensions.<Your UNIQUE designator here>".
 - `project_short_description` : a short description for your project that will

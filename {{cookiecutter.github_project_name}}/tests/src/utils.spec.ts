@@ -9,6 +9,8 @@ let numComms = 0;
 
 export
 class MockComm {
+    target_name = 'dummy';
+
     constructor() {
         this.comm_id = `mock-comm-id-${numComms}`;
         numComms += 1;
@@ -26,12 +28,19 @@ class MockComm {
             return Promise.resolve();
         }
     }
-    close() {
+    close(): string {
         if (this._on_close) {
             this._on_close();
         }
+        return 'dummy';
     }
-    send() {}
+    send(): string {
+        return 'dummy';
+    }
+
+    open(): string {
+        return 'dummy';
+    }
     comm_id: string;
     _on_msg: Function | null = null;
     _on_close: Function | null = null;
