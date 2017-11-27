@@ -596,9 +596,6 @@ def _join_translated(translated_parts, os_sep_class):
     This is different from a simple join, as care need to be taken
     to allow ** to match ZERO or more directories.
     """
-    if len(translated_parts) < 2:
-        return translated_parts[0]
-
     res = ''
     for part in translated_parts[:-1]:
         if part == '.*':
@@ -607,9 +604,12 @@ def _join_translated(translated_parts, os_sep_class):
             res += part
         else:
             res += part + os_sep_class
+
     if translated_parts[-1] == '.*':
-        # Final part is **, undefined behavior since we don't check against filesystem
+        # Final part is **
         res += translated_parts[-1]
+        # Follow stdlib/git convention of matching all sub files/directories:
+        res += '({os_sep_class}?.*)?'.format(os_sep_class=os_sep_class)
     else:
         res += translated_parts[-1]
     return res
