@@ -19,7 +19,7 @@ Install [cookiecutter](https://github.com/audreyr/cookiecutter):
 
 After installing cookiecutter, use the widget-cookiecutter:
 
-    $ cookiecutter https://github.com/vidartf/opinionated-widget-cookiecutter.git
+    $ cookiecutter https://github.com/jupyter-widgets/opinionated-widget-cookiecutter.git
 
 As widget-cookiecutter runs, you will be asked for basic information about
 your custom Jupyter widget project. You will be prompted for the following
