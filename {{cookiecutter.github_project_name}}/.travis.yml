@@ -11,6 +11,9 @@ matrix:
   include:
     - python: 3.5
       env: GROUP=js
+  include:
+    - python: 3.6
+      env: GROUP=docs
 cache:
   pip: true
   directories:
@@ -31,6 +34,8 @@ install:
       pip install --upgrade ".[test]" -v
     elif [[ $GROUP == js ]]; then
       pip install --upgrade -e ".[test]" -v
+    elif [[ $GROUP == docs ]]; then
+      pip install --upgrade ".[test, examples, docs]" -v
     fi
 before_script:
   # Set up a virtual screen for Firefox browser testing:
@@ -52,6 +57,14 @@ script:
       (exit $EXIT_STATUS)
     elif [[ $GROUP == js ]]; then
       npm test
+    elif [[ $GROUP == docs ]]; then
+      EXIT_STATUS=0
+      cd docs
+      make html || EXIT_STATUS=$?
+      make linkcheck || EXIT_STATUS=$?
+      cd ..
+      python -m pytest_check_links || EXIT_STATUS=$?
+      exit $EXIT_STATUS
     fi
 after_success:
     - codecov
