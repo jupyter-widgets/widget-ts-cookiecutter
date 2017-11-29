@@ -25,12 +25,13 @@ import sys
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
 
-from distutils.core import setup
 from distutils.cmd import Command
 from distutils.command.build_py import build_py
 from distutils.command.sdist import sdist
-from distutils.dist import Distribution
 from distutils import log
+
+from setuptools.command.develop import develop
+from setuptools.command.bdist_egg import bdist_egg
 
 try:
     from wheel.bdist_wheel import bdist_wheel
@@ -67,11 +68,6 @@ if "--skip-npm" in sys.argv:
     sys.argv.remove("--skip-npm")
 else:
     skip_npm = False
-
-
-# For some commands, use setuptools.  Note that we do NOT list install here!
-if 'develop' in sys.argv or any(a.startswith('bdist') for a in sys.argv):
-    import setuptools
 
 
 # ---------------------------------------------------------------------------
@@ -127,6 +123,17 @@ def update_package_data(distribution):
     build_py.finalize_options()
 
 
+class bdist_egg_disabled(bdist_egg):
+    """Disabled version of bdist_egg
+
+    Prevents setup.py install performing setuptools' default easy_install,
+    which it should never ever do.
+    """
+    def run(self):
+        sys.exit("Aborting implicit building of eggs. Use `pip install .` "
+                 " to install from source.")
+
+
 def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
         data_files_spec=None):
     """Create a command class with the given optional prerelease class.
@@ -162,18 +169,22 @@ def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
     wrapper = functools.partial(_wrap_command, wrapped)
     handle_files = _get_file_handler(package_data_spec, data_files_spec)
 
+    if 'bdist_egg' in sys.argv:
+        egg = wrapper(bdist_egg, strict=True)
+    else:
+        egg = bdist_egg_disabled
+
     cmdclass = dict(
         build_py=wrapper(build_py, strict=is_repo),
+        bdist_egg=egg,
         sdist=wrapper(sdist, strict=True),
-        handle_files=handle_files
+        handle_files=handle_files,
     )
 
     if bdist_wheel:
         cmdclass['bdist_wheel'] = wrapper(bdist_wheel, strict=True)
 
-    if 'develop' in sys.argv:
-        from setuptools.command.develop import develop
-        cmdclass['develop'] = wrapper(develop, strict=True)
+    cmdclass['develop'] = wrapper(develop, strict=True)
     return cmdclass
 
 
@@ -231,6 +242,7 @@ def combine_commands(*commands):
     """Return a Command that combines several commands."""
 
     class CombinedCommand(Command):
+        user_options = []
 
         def initialize_options(self):
             self.commands = []
