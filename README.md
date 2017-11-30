@@ -1,13 +1,14 @@
-# opinionated-widget-cookiecutter
+# widget-ts-cookiecutter
+
 #### A cookiecutter template for creating a custom Jupyter widget project
 
 A [cookiecutter](https://github.com/audreyr/cookiecutter) template for a custom
 Jupyter widget project.
 
-## What is widget-cookiecutter?
+## What is widget-ts-cookiecutter?
 
-With **widget-cookiecutter** you can create a custom Jupyter interactive
-widget project with sensible defaults. widget-cookiecutter helps custom widget
+With **widget-ts-cookiecutter** you can create a custom Jupyter interactive
+widget project with sensible defaults. widget-ts-cookiecutter helps custom widget
 authors get started with best practices for the packaging and distribution
 of a custom Jupyter interactive widget library.
 
@@ -17,11 +18,11 @@ Install [cookiecutter](https://github.com/audreyr/cookiecutter):
 
     $ pip install cookiecutter
 
-After installing cookiecutter, use the widget-cookiecutter:
+After installing cookiecutter, use widget-ts-cookiecutter:
 
-    $ cookiecutter https://github.com/jupyter-widgets/opinionated-widget-cookiecutter.git
+    $ cookiecutter https://github.com/jupyter-widgets/widget-ts-cookiecutter.git
 
-As widget-cookiecutter runs, you will be asked for basic information about
+As widget-ts-cookiecutter runs, you will be asked for basic information about
 your custom Jupyter widget project. You will be prompted for the following
 information:
 
