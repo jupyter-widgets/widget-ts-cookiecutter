@@ -7,13 +7,15 @@
 from __future__ import print_function
 from glob import glob
 from os.path import join as pjoin
-import sys
+
 
 from setupbase import (
     create_cmdclass, install_npm, ensure_targets,
     find_packages, combine_commands, ensure_python,
-    get_version, setup, HERE
+    get_version, HERE
 )
+
+from setuptools import setup
 
 
 # The name of the project
@@ -80,33 +82,23 @@ setup_args = dict(
         'Programming Language :: Python :: 3.6',
         'Framework :: Jupyter',
     ],
+    include_package_data = True,
+    install_requires = [
+        'ipywidgets>=7.0.0',
+    ],
+    extras_require = {
+        'test': [
+            'pytest',
+            'pytest-cov',
+            'nbval',
+        ],
+        'examples': [
+            # Any requirements for the examples to run
+        ],
+    },
+    entry_points = {
+    },
 )
-
-
-setuptools_args = dict(include_package_data=True)
-install_requires = setuptools_args['install_requires'] = [
-    'ipywidgets>=7.0.0',
-]
-
-extras_require = setuptools_args['extras_require'] = {
-    'test': [
-        'pytest',
-        'pytest-cov',
-        'nbval',
-    ],
-    'docs': [
-        'sphinx',
-        'recommonmark',
-        'sphinx_rtd_theme'
-    ],
-}
-
-if 'setuptools' in sys.modules:
-    setup_args.update(setuptools_args)
-
-    setup_args.pop('scripts', None)
-
-    setup_args.update(setuptools_args)
 
 if __name__ == '__main__':
     setup(**setup_args)
