@@ -47,10 +47,10 @@ you should run the tests:
 pip install -e .
 
 # Run the python tests. This should not give you a few sucessful example tests
+# You may need to install nbval first: pip install nbval
 py.test
 
 # Run the JS tests. This should again, only give TODO errors (Expected 'Value' to equal 'Expected value'):
-cd ts
 npm test
 ```
 
