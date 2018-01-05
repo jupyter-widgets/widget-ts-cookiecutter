@@ -46,7 +46,8 @@ package_data_spec = {
 data_files_spec = [
     ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}',
         pjoin(nb_path, '*.js*')),
-    ('share/jupyter/lab/extensions', lab_path)
+    ('share/jupyter/lab/extensions', lab_path),
+    ('etc/jupyter/nbconfig/notebook.d/' , '{{ cookiecutter.npm_package_name }}.json')
 ]
 
 
