@@ -28,7 +28,7 @@ ensure_python('>=3.3')
 version = get_version(pjoin(name, '_version.py'))
 
 nb_path = pjoin(HERE, name, 'nbextension', 'static')
-lab_path = pjoin(HERE, name, 'labextension', '*.tgz')
+lab_path = pjoin(HERE, name, 'labextension')
 
 # Representative files that should exist after a successful build
 jstargets = [
@@ -45,9 +45,9 @@ package_data_spec = {
 
 data_files_spec = [
     ('share/jupyter/nbextensions/{{ cookiecutter.npm_package_name }}',
-        pjoin(nb_path, '*.js*')),
-    ('share/jupyter/lab/extensions', lab_path),
-    ('etc/jupyter/nbconfig/notebook.d/' , '{{ cookiecutter.npm_package_name }}.json')
+        nb_path, '*.js*'),
+    ('share/jupyter/lab/extensions', lab_path, '*.tgz'),
+    ('etc/jupyter/nbconfig/notebook.d/' , HERE, '{{ cookiecutter.npm_package_name }}.json')
 ]
 
 

@@ -9,6 +9,7 @@ This file originates from the 'jupyter-packaging' package, and
 contains a set of useful utilities for including npm packages
 within a Python package.
 """
+from collections import defaultdict
 from os.path import join as pjoin
 import io
 import os
@@ -146,8 +147,9 @@ def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
         A dictionary whose keys are the dotted package names and
         whose values are a list of glob patterns.
     data_files_spec: list, optional
-        A list of (path, patterns) tuples where the path is the
-        `data_files` install path and the patterns are glob patterns.
+        A list of (path, dname, pattern) tuples where the path is the
+        `data_files` install path, dname is the source directory, and the
+        pattern is a glob pattern.
 
     Notes
     -----
@@ -159,9 +161,12 @@ def create_cmdclass(prerelease_cmd=None, package_data_spec=None,
     name.
     e.g. `dict(foo=['./bar/*', './baz/**'])`
 
-    The data files glob patterns should be absolute paths or relative paths
-    from the root directory of the repository.
-    e.g. `('share/foo/bar', ['pkgname/bizz/*', 'pkgname/baz/**'])`
+    The data files directories should be absolute paths or relative paths
+    from the root directory of the repository.  Data files are specified
+    differently from `package_data` because we need a separate path entry
+    for each nested folder in `data_files`, and this makes it easier to
+    parse.
+    e.g. `('share/foo/bar', 'pkgname/bizz, '*')`
     """
     wrapped = [prerelease_cmd] if prerelease_cmd else []
     if package_data_spec or data_files_spec:
@@ -467,10 +472,10 @@ def _wrap_command(cmds, cls, strict=True):
                         raise
                     else:
                         pass
-
-            result = cls.run(self)
             # update package data
             update_package_data(self.distribution)
+
+            result = cls.run(self)
             return result
     return WrappedCommand
 
@@ -483,18 +488,56 @@ def _get_file_handler(package_data_spec, data_files_spec):
         def run(self):
             package_data = self.distribution.package_data
             package_spec = package_data_spec or dict()
-            data_spec = data_files_spec or []
 
             for (key, patterns) in package_spec.items():
                 package_data[key] = _get_package_data(key, patterns)
 
-            data_files = self.distribution.data_files or []
-            for (path, patterns) in data_spec:
-                data_files.append((path, _get_files(patterns)))
-
-            self.distribution.data_files = data_files
+            self.distribution.data_files = _get_data_files(
+                data_files_spec, self.distribution.data_files
+            )
 
     return FileHandler
+
+
+def _get_data_files(data_specs, existing):
+    """Expand data file specs into valid data files metadata.
+
+    Parameters
+    ----------
+    data_specs: list of tuples
+        See [createcmdclass] for description.
+    existing: list of tuples
+        The existing distrubution data_files metadata.
+
+    Returns
+    -------
+    A valid list of data_files items.
+    """
+    # Extract the existing data files into a staging object.
+    file_data = defaultdict(list)
+    for (path, files) in existing or []:
+        file_data[path] = files
+
+    # Extract the files and assign them to the proper data
+    # files path.
+    for (path, dname, pattern) in data_specs or []:
+        dname = dname.replace(os.sep, '/')
+        offset = len(dname) + 1
+
+        files = _get_files(pjoin(dname, pattern))
+        for fname in files:
+            # Normalize the path.
+            root = os.path.dirname(fname)
+            full_path = '/'.join([path, root[offset:]])
+            if full_path.endswith('/'):
+                full_path = full_path[:-1]
+            file_data[full_path].append(fname)
+
+    # Construct the data files spec.
+    data_files = []
+    for (path, files) in file_data.items():
+        data_files.append((path, files))
+    return data_files
 
 
 def _get_files(file_patterns, top=HERE):
@@ -631,7 +674,7 @@ def _translate_glob_part(pat):
     res = []
     while i < n:
         c = pat[i]
-        i = i+1
+        i = i + 1
         if c == '*':
             # Match anything but path separators:
             res.append('[^%s]*' % SEPARATORS)
@@ -640,16 +683,16 @@ def _translate_glob_part(pat):
         elif c == '[':
             j = i
             if j < n and pat[j] == '!':
-                j = j+1
+                j = j + 1
             if j < n and pat[j] == ']':
-                j = j+1
+                j = j + 1
             while j < n and pat[j] != ']':
-                j = j+1
+                j = j + 1
             if j >= n:
                 res.append('\\[')
             else:
                 stuff = pat[i:j].replace('\\', '\\\\')
-                i = j+1
+                i = j + 1
                 if stuff[0] == '!':
                     stuff = '^' + stuff[1:]
                 elif stuff[0] == '^':
