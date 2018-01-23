@@ -149,3 +149,5 @@ $RECYCLE.BIN/
 # -------------
 **/coverage/
 
+# Packed lab extensions
+{{ cookiecutter.python_package_name  }}/labextension
