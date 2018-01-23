@@ -14,8 +14,7 @@ matrix:
 cache:
   pip: true
   directories:
-    - {{ cookiecutter.python_package_name }}/jlextension/node_modules # NPM packages
-    - ts/node_modules # NPM packages
+    - node_modules # NPM packages
     - $HOME/.npm
 before_install:
   - pip install -U pip setuptools
@@ -50,7 +49,7 @@ script:
       pushd $(mktemp -d)
       py.test -l --cov-report xml:$TRAVIS_BUILD_DIR/coverage.xml --cov={{ cookiecutter.python_package_name }} --pyargs {{ cookiecutter.python_package_name }} || EXIT_STATUS=$?
       popd
-      exit $EXIT_STATUS
+      (exit $EXIT_STATUS)
     elif [[ $GROUP == js ]]; then
       npm test
     fi
