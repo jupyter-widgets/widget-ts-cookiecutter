@@ -33,7 +33,6 @@ Contents
    :maxdepth: 1
 
    examples/index
-   api/index
 
 
 .. toctree::
