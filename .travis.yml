@@ -2,6 +2,9 @@ language: python
 python:
   - 3.6
 sudo: false
+addons:
+  apt_packages:
+    - pandoc
 cache:
   pip: true
   directories:
@@ -14,7 +17,7 @@ install:
   - pushd $(mktemp -d)
   - cookiecutter $TRAVIS_BUILD_DIR --config-file $TRAVIS_BUILD_DIR/tests/testconfig.yaml --no-input
   - pushd jupyter-widget-testwidgets
-  - pip install --upgrade -v -e ".[test]"
+  - pip install --upgrade -v -e ".[test, examples, docs]"
 before_script:
   - |
     export CHROME_BIN=chromium-browser
@@ -23,6 +26,11 @@ before_script:
 script:
   - py.test
   - npm test
+  # Check docs can be build + links
+  - pushd docs
+  - make html
+  - make linkcheck
+  - popd
   # Make a non-local install so the data_files get populated
   - pip uninstall -y ipywidgettestwidgets
   - pip install .
