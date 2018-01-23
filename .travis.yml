@@ -26,8 +26,6 @@ before_script:
 script:
   - py.test
   - npm test
-  # Check links in markdown files:
-  - python -m pytest_check_links --links-ext=.md -o testpaths=. -o addopts=
   # Check docs can be build + links
   - pushd docs
   - make html
