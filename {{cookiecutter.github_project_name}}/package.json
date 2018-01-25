@@ -8,9 +8,9 @@
     "jupyterlab extension",
     "widgets"
   ],
-  "homepage": "https://github.com/jupyter/{{ cookiecutter.npm_package_name }}",
+  "homepage": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.npm_package_name }}",
   "bugs": {
-    "url": "https://github.com/jupyter/{{ cookiecutter.npm_package_name }}/issues"
+    "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.npm_package_name }}/issues"
   },
   "license": "BSD-3-Clause",
   "author": "",
@@ -18,7 +18,7 @@
   "types": "./lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupyter/{{ cookiecutter.npm_package_name }}"
+    "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.npm_package_name }}"
   },
   "scripts": {
     "build": "npm run build:lib && npm run build:nbextension",
