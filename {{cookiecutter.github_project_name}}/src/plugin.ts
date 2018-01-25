@@ -18,9 +18,8 @@ import {
 } from './widget';
 
 import {
-  JUPYTER_EXTENSION_VERSION
+  EXTENSION_SPEC_VERSION
 } from './version';
-
 
 const EXTENSION_ID = '{{ cookiecutter.jlab_extension_id }}';
 
@@ -44,7 +43,7 @@ export default examplePlugin;
 function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWidgetRegistry): void {
   registry.registerWidget({
     name: '{{ cookiecutter.npm_package_name }}',
-    version: JUPYTER_EXTENSION_VERSION,
+    version: EXTENSION_SPEC_VERSION,
     exports: {
       ExampleModel: ExampleModel,
       ExampleView: ExampleView
