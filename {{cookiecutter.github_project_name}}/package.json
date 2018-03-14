@@ -5,7 +5,7 @@
   "keywords": [
     "jupyter",
     "jupyterlab",
-    "jupyterlab extension",
+    "jupyterlab-extension",
     "widgets"
   ],
   "homepage": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}",
