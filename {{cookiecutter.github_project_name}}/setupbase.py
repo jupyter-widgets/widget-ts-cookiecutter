@@ -212,7 +212,12 @@ def run(cmd, **kwargs):
     kwargs.setdefault('shell', os.name == 'nt')
     if not isinstance(cmd, (list, tuple)) and os.name != 'nt':
         cmd = shlex.split(cmd)
-    cmd[0] = which(cmd[0])
+    cmd_path = which(cmd[0])
+    if not cmd_path:
+        sys.exit("Aborting. Could not find cmd (%s) in path. "
+                 "If command is not expected to be in user's path, "
+                 "use an absolute path." % cmd[0])
+    cmd[0] = cmd_path
     return subprocess.check_call(cmd, **kwargs)
 
 
@@ -499,13 +504,20 @@ def _get_file_handler(package_data_spec, data_files_spec):
     return FileHandler
 
 
-def _get_data_files(data_specs, existing):
+def _glob_pjoin(*parts):
+    """Join paths for glob processing"""
+    if parts[0] in ('.', ''):
+        parts = parts[1:]
+    return pjoin(*parts).replace(os.sep, '/')
+
+
+def _get_data_files(data_specs, existing, top=HERE):
     """Expand data file specs into valid data files metadata.
 
     Parameters
     ----------
     data_specs: list of tuples
-        See [createcmdclass] for description.
+        See [create_cmdclass] for description.
     existing: list of tuples
         The existing distrubution data_files metadata.
 
@@ -521,14 +533,16 @@ def _get_data_files(data_specs, existing):
     # Extract the files and assign them to the proper data
     # files path.
     for (path, dname, pattern) in data_specs or []:
+        if os.path.isabs(dname):
+            dname = os.path.relpath(dname, top)
         dname = dname.replace(os.sep, '/')
-        offset = len(dname) + 1
-
-        files = _get_files(pjoin(dname, pattern))
+        offset = 0 if dname in ('.', '') else len(dname) + 1
+        files = _get_files(_glob_pjoin(dname, pattern), top=top)
         for fname in files:
             # Normalize the path.
             root = os.path.dirname(fname)
-            full_path = '/'.join([path, root[offset:]])
+            full_path = _glob_pjoin(path, root[offset:])
+            print(dname, root, full_path, offset)
             if full_path.endswith('/'):
                 full_path = full_path[:-1]
             file_data[full_path].append(fname)
@@ -573,7 +587,8 @@ def _get_files(file_patterns, top=HERE):
             dirnames.remove('node_modules')
         for m in matchers:
             for filename in filenames:
-                fn = os.path.relpath(pjoin(root, filename), top)
+                fn = os.path.relpath(_glob_pjoin(root, filename), top)
+                fn = fn.replace(os.sep, '/')
                 if m(fn):
                     files.add(fn.replace(os.sep, '/'))
 
@@ -598,7 +613,7 @@ def _get_package_data(root, file_patterns=None):
     """
     if file_patterns is None:
         file_patterns = ['*']
-    return _get_files(file_patterns, pjoin(HERE, root))
+    return _get_files(file_patterns, _glob_pjoin(HERE, root))
 
 
 def _compile_pattern(pat, ignore_case=True):
