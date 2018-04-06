@@ -2,7 +2,7 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  DOMWidgetModel, DOMWidgetView
+  DOMWidgetModel, DOMWidgetView, ISerializers
 } from '@jupyter-widgets/base';
 
 import {
@@ -24,7 +24,7 @@ class ExampleModel extends DOMWidgetModel {
     };
   }
 
-  static serializers = {
+  static serializers: ISerializers = {
       ...DOMWidgetModel.serializers,
       // Add any extra serializers here
     }
