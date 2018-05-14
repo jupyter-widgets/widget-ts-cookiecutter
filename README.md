@@ -54,6 +54,25 @@ py.test
 npm test
 ```
 
+When developing your extensions, you need to manually enable your extensions with the
+notebook / lab frontend. For lab, this is done by the command:
+
+```
+jupyter labextension install .
+```
+
+For classic notebook, you can run:
+
+```
+jupyter nbextension install --sys-prefix --symlink --py <your python package name>
+jupyter nbextension enable --sys-prefix --py <your python package name>
+```
+
+Note that the `--symlink` flag doesn't work on Windows, so you will here have to run
+the `install` command every time that you rebuild your extension. For certain installations
+you might also need another flag instead of `--sys-prefix`, but we won't cover the meaning
+of those flags here.
+
 
 ## Releasing your initial packages:
 
