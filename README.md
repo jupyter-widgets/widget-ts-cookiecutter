@@ -82,7 +82,6 @@ of those flags here.
 - Relase the npm packages:
   ```bash
   npm login
-  cd ts
   npm publish
   # Now, you need to update the entry in /<your python package>/jlextension/package.json
   # from "file:../../ts" to "^<the version of the NPM packge you just released>
