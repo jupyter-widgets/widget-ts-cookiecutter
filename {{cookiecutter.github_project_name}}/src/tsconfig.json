@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "noImplicitAny": true,
-    "lib": ["dom", "es5", "es2015.promise", "es2015.iterable"],
-    "noEmitOnError": true,
-    "strictNullChecks": true,
+    "lib": ["es2015", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "ES5",
+    "noEmitOnError": true,
+    "noUnusedLocals": true,
     "outDir": "../lib",
+    "target": "es2015",
+    "strict": true,
     "skipLibCheck": true,
-    "sourceMap": true
+    "types": [],
+    "esModuleInterop":true
   }
 }
