@@ -11,6 +11,7 @@
     "strict": true,
     "skipLibCheck": true,
     "types": [],
-    "esModuleInterop":true
+    "esModuleInterop":true,
+    "sourceMap": true
   }
 }
