@@ -8,6 +8,10 @@
     "jupyterlab-extension",
     "widgets"
   ],
+  "files": [
+    "lib/**/*.js",
+    "dist/*.js"
+  ],  
   "homepage": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}",
   "bugs": {
     "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}/issues"
