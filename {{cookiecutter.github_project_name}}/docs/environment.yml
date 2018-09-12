@@ -1,0 +1,11 @@
+
+name: {{cookiecutter.python_package_name}}_docs
+channels:
+  - conda-forge
+dependencies:
+- python=3.5
+- nodejs
+- numpy
+- sphinx
+- nbsphinx
+- jupyter_sphinx
