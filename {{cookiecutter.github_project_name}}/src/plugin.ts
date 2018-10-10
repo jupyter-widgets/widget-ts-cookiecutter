@@ -13,12 +13,10 @@ import {
   IJupyterWidgetRegistry
  } from '@jupyter-widgets/base';
 
-import {
-  ExampleModel, ExampleView
-} from './widget';
+import * as widgetExports from './widget';
 
 import {
-  EXTENSION_SPEC_VERSION
+  MODULE_NAME, MODULE_VERSION
 } from './version';
 
 const EXTENSION_ID = '{{ cookiecutter.jlab_extension_id }}';
@@ -42,11 +40,8 @@ export default examplePlugin;
  */
 function activateWidgetExtension(app: Application<Widget>, registry: IJupyterWidgetRegistry): void {
   registry.registerWidget({
-    name: '{{ cookiecutter.npm_package_name }}',
-    version: EXTENSION_SPEC_VERSION,
-    exports: {
-      ExampleModel: ExampleModel,
-      ExampleView: ExampleView
-    }
+    name: MODULE_NAME,
+    version: MODULE_VERSION,
+    exports: widgetExports,
   });
 }
