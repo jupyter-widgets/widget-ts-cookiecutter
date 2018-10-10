@@ -1,13 +1,14 @@
 // Copyright (c) {{ cookiecutter.author_name }}.
 // Distributed under the terms of the Modified BSD License.
 
+const data = require('../package.json');
+
 /**
- * The version of the attribute spec that this package
- * implements. This is the value used in
- * _model_module_version/_view_module_version.
- *
- * Update this value when attributes are added/removed from
- * your models, or serialized format changes.
+ * The current package version.
  */
-export
-const EXTENSION_SPEC_VERSION = '1.0.0';
+export const MODULE_VERSION = data.version;
+
+/*
+ * The current package name.
+ */
+export const MODULE_NAME = data.name;

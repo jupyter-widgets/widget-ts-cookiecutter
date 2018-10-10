@@ -3,7 +3,7 @@ skip_branch_with_pr: true
 
 # environment variables
 environment:
-  nodejs_version: "6.9"
+  nodejs_version: "8"
   matrix:
     - PYTHON: "C:\\Miniconda36-x64"
       PYTHON_VERSION: "3.6.x"

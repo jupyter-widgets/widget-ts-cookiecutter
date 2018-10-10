@@ -6,7 +6,7 @@ import {
 } from '@jupyter-widgets/base';
 
 import {
-  EXTENSION_SPEC_VERSION
+  MODULE_NAME, MODULE_VERSION
 } from './version';
 
 
@@ -30,11 +30,11 @@ class ExampleModel extends DOMWidgetModel {
     }
 
   static model_name = 'ExampleModel';
-  static model_module = '{{ cookiecutter.npm_package_name }}';
-  static model_module_version = EXTENSION_SPEC_VERSION;
-  static view_name = 'ExampleView';  // Set to null if no view
-  static view_module = '{{ cookiecutter.npm_package_name }}';   // Set to null if no view
-  static view_module_version = EXTENSION_SPEC_VERSION;
+  static model_module = MODULE_NAME;
+  static model_module_version = MODULE_VERSION;
+  static view_name = 'ExampleView';   // Set to null if no view
+  static view_module = MODULE_NAME;   // Set to null if no view
+  static view_module_version = MODULE_VERSION;
 }
 
 
