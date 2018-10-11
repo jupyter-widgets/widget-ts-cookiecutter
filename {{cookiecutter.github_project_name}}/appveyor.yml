@@ -17,6 +17,8 @@ environment:
 # build cache to preserve files/folders between builds
 cache:
   - '%AppData%/npm-cache'
+  - '%PYTHON%/pkgs'
+  - '%LOCALAPPDATA%\pip\Cache'
 
 # scripts that run after cloning repository
 install:
