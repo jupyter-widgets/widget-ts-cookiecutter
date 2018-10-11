@@ -6,16 +6,22 @@ const rules = [
 
 // Packages that shouldn't be bundled but loaded at runtime
 const externals = ['@jupyter-widgets/base', 'three', 'jupyter-threejs'];
-var version = require('./package.json').version;
-var path = require('path');
+const version = require('./package.json').version;
+const path = require('path');
+
+
+const resolve = {
+  // Add '.ts' and '.tsx' as resolvable extensions.
+  extensions: [".webpack.js", ".web.js", ".ts", ".js"]
+};
 
 module.exports = [
   {
     // Notebook extension
-    entry: './src/index.ts',
+    entry: './src/extension.ts',
     output: {
       filename: 'index.js',
-      path: __dirname + '/{{ cookiecutter.python_package_name }}/nbextension/static',
+      path: path.resolve(__dirname, '{{ cookiecutter.python_package_name }}', 'nbextension', 'static'),
       libraryTarget: 'amd'
     },
     module: {
@@ -23,10 +29,7 @@ module.exports = [
     },
     devtool: 'source-map',
     externals: ['@jupyter-widgets/base'],
-    resolve: {
-      // Add '.ts' and '.tsx' as resolvable extensions.
-      extensions: [".webpack.js", ".web.js", ".ts", ".js"]
-    }
+    resolve,
   },
 
   {
@@ -34,7 +37,7 @@ module.exports = [
     entry: './src/index.ts',
     output: {
       filename: 'embed-bundle.js',
-      path: __dirname + '/docs/source/_static',
+      path: path.resolve(__dirname, 'docs', 'source', '_static'),
       library: "{{ cookiecutter.npm_package_name }}",
       libraryTarget: 'amd'
     },
@@ -43,10 +46,7 @@ module.exports = [
     },
     devtool: 'source-map',
     externals: ['@jupyter-widgets/base'],
-    resolve: {
-      // Add '.ts' and '.tsx' as resolvable extensions.
-      extensions: [".webpack.js", ".web.js", ".ts", ".js"]
-    },
+    resolve,
   },
   {// Embeddable {{ cookiecutter.npm_package_name }} bundle
     //
@@ -75,9 +75,6 @@ module.exports = [
         rules: rules
     },
     externals: ['@jupyter-widgets/base'],
-    resolve: {
-      // Add '.ts' and '.tsx' as resolvable extensions.
-      extensions: [".webpack.js", ".web.js", ".ts", ".js"]
-    },
+    resolve,
   }
 ];
