@@ -5,12 +5,12 @@ skip_branch_with_pr: true
 environment:
   nodejs_version: "8"
   matrix:
-    - PYTHON: "C:\\Miniconda36-x64"
-      PYTHON_VERSION: "3.6.x"
+    - PYTHON: "C:\\Miniconda3-x64"
+      PYTHON_VERSION: "3.7"
       PYTHON_MAJOR: 3
       PYTHON_ARCH: "64"
     - PYTHON: "C:\\Miniconda3"
-      PYTHON_VERSION: "3.4.x"
+      PYTHON_VERSION: "3.4"
       PYTHON_MAJOR: 3
       PYTHON_ARCH: "32"
 
@@ -24,6 +24,13 @@ install:
   - ps: Install-Product node $env:nodejs_version
   # Ensure python scripts are from right version:
   - 'SET "PATH=%PYTHON%\Scripts;%PYTHON%;%PATH%"'
+  # Setup conda:
+  - 'conda list'
+  - 'conda update conda -y'
+  # If 32 bit, force conda to use it:
+  - 'IF %PYTHON_ARCH% EQU 32 SET CONDA_FORCE_32BIT=1'
+  - 'conda create -n test_env python=%PYTHON_VERSION% -y'
+  - 'activate test_env'
   # Update install tools:
   - 'conda install setuptools pip -y'
   - 'python -m pip install --upgrade pip'

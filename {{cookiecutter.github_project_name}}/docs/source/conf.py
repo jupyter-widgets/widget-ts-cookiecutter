@@ -65,7 +65,7 @@ author = '{{ cookiecutter.author_name }}'
 # The short X.Y version.
 
 
-# get version from nbdime:
+# get version from python package:
 import os
 here = os.path.dirname(__file__)
 repo = os.path.join(here, '..', '..')
