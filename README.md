@@ -79,6 +79,7 @@ of those flags here.
 - Add tests
 - Ensure tests pass locally and on CI. Check that the coverage is reasonable.
 - Make a release commit, where you remove the `, 'dev'` entry in `_version.py`.
+- Update the version in package.json
 - Relase the npm packages:
   ```bash
   npm login
