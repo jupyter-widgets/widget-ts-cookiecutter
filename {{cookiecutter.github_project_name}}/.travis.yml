@@ -70,4 +70,4 @@ script:
       (exit $EXIT_STATUS)
     fi
 after_success:
-    - codecov
+  - codecov
