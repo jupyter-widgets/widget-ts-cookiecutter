@@ -89,7 +89,7 @@ of those flags here.
 - Publish the package to PyPI:
   ```bash
   pip install twine
-  twine upload dist/*
+  twine upload dist/<python package name>*
   ```
 - Tag the release commit (`git tag <python package version identifier>`)
 - Update the version in `_version.py`, and put it back to dev (e.g. 0.1.0 -> 0.2.0.dev).

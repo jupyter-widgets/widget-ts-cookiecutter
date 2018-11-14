@@ -67,7 +67,7 @@ module.exports = [
         filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),
         libraryTarget: 'amd',
-        library: "{{ cookiecutter.npm_package_name }}", 
+        library: "{{ cookiecutter.npm_package_name }}",
         publicPath: 'https://unpkg.com/{{ cookiecutter.npm_package_name }}@' + version + '/dist/'
     },
     devtool: 'source-map',
