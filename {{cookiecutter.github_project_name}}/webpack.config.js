@@ -4,8 +4,6 @@ const rules = [
   { test: /\.js$/, loader: 'source-map-loader' },
 ];
 
-// Packages that shouldn't be bundled but loaded at runtime
-const externals = ['@jupyter-widgets/base', 'three', 'jupyter-threejs'];
 const version = require('./package.json').version;
 const path = require('path');
 
