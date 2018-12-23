@@ -8,11 +8,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "ES5",
-    "outDir": "../build",
+    "outDir": "build",
     "skipLibCheck": true,
     "sourceMap": true
   },
   "include": [
-    "**/*.ts"
+    "src/*.ts",
+    "../src/**/*.ts"
   ]
 }
