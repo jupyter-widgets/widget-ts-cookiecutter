@@ -1,12 +1,15 @@
+const path = require('path');
+const version = require('./package.json').version;
+
 // Custom webpack rules
 const rules = [
   { test: /\.ts$/, loader: 'ts-loader' },
   { test: /\.js$/, loader: 'source-map-loader' },
+  { test: /\.css$/, use: ['style-loader', 'css-loader']}
 ];
 
-const version = require('./package.json').version;
-const path = require('path');
-
+// Packages that shouldn't be bundled but loaded at runtime
+const externals = ['@jupyter-widgets/base'];
 
 const resolve = {
   // Add '.ts' and '.tsx' as resolvable extensions.
@@ -14,8 +17,13 @@ const resolve = {
 };
 
 module.exports = [
+  /**
+   * Notebook extension
+   *
+   * This bundle only contains the part of the JavaScript that is run on load of
+   * the notebook.
+   */
   {
-    // Notebook extension
     entry: './src/extension.ts',
     output: {
       filename: 'index.js',
@@ -26,7 +34,7 @@ module.exports = [
       rules: rules
     },
     devtool: 'source-map',
-    externals: ['@jupyter-widgets/base'],
+    externals,
     resolve,
   },
 
@@ -43,7 +51,7 @@ module.exports = [
       rules: rules
     },
     devtool: 'source-map',
-    externals: ['@jupyter-widgets/base'],
+    externals,
     resolve,
   },
   {// Embeddable {{ cookiecutter.npm_package_name }} bundle
@@ -72,7 +80,7 @@ module.exports = [
     module: {
         rules: rules
     },
-    externals: ['@jupyter-widgets/base'],
+    externals,
     resolve,
   }
 ];
