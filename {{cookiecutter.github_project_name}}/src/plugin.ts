@@ -19,7 +19,7 @@ import {
   MODULE_NAME, MODULE_VERSION
 } from './version';
 
-const EXTENSION_ID = '{{ cookiecutter.npm_project_name }}';
+const EXTENSION_ID = '{{ cookiecutter.npm_package_name }}:plugin';
 
 /**
  * The example plugin.
