@@ -21,7 +21,6 @@ import {
 
 const EXTENSION_ID = '{{ cookiecutter.npm_project_name }}';
 
-
 /**
  * The example plugin.
  */
