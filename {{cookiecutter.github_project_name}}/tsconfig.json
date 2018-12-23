@@ -8,12 +8,13 @@
     "noEmitOnError": true,
     "noUnusedLocals": true,
     "outDir": "lib",
+    "resolveJsonModule": true,
     "rootDir": "src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "es2015",
-    "types": []
+    "types": ["node"]
   },
   "include": ["src/*"]
 }
