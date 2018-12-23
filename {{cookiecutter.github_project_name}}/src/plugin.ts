@@ -19,7 +19,7 @@ import {
   MODULE_NAME, MODULE_VERSION
 } from './version';
 
-const EXTENSION_ID = '{{ cookiecutter.jlab_extension_id }}';
+const EXTENSION_ID = '{{ cookiecutter.npm_project_name }}';
 
 
 /**
