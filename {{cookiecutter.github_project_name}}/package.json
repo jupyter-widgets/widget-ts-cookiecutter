@@ -27,7 +27,7 @@
   "scripts": {
     "build": "npm run build:lib && npm run build:nbextension",
     "build:labextension": "npm run clean:labextension && mkdirp {{ cookiecutter.python_package_name }}/labextension && cd {{ cookiecutter.python_package_name }}/labextension && npm pack ../..",
-    "build:lib": "tsc --project src",
+    "build:lib": "tsc",
     "build:nbextension": "webpack -p",
     "build:all": "npm run build:labextension && npm run build:nbextension",
     "clean": "npm run clean:lib && npm run clean:nbextension",
