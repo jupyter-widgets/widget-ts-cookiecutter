@@ -17,7 +17,10 @@
     "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}/issues"
   },
   "license": "BSD-3-Clause",
-  "author": "",
+  "author": {
+    "name": "{{ cookiecutter.author_name }}",
+    "email": "{{ cookiecutter.author_email }}"
+  },
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "repository": {
