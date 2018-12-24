@@ -44,7 +44,7 @@
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
     "test:ie": "karma start --browsers=IE tests/karma.conf.js",
     "watch": "npm-run-all -p watch:*",
-    "watch:lib": "tsc -w --project src",
+    "watch:lib": "tsc -w",
     "watch:nbextension": "webpack --watch"
   },
   "dependencies": {
