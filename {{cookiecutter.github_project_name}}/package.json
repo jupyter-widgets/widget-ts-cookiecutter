@@ -17,7 +17,10 @@
     "url": "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}/issues"
   },
   "license": "BSD-3-Clause",
-  "author": "",
+  "author": {
+    "name": "{{ cookiecutter.author_name }}",
+    "email": "{{ cookiecutter.author_email }}"
+  },
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "repository": {
@@ -27,7 +30,7 @@
   "scripts": {
     "build": "npm run build:lib && npm run build:nbextension",
     "build:labextension": "npm run clean:labextension && mkdirp {{ cookiecutter.python_package_name }}/labextension && cd {{ cookiecutter.python_package_name }}/labextension && npm pack ../..",
-    "build:lib": "tsc --project src",
+    "build:lib": "tsc",
     "build:nbextension": "webpack -p",
     "build:all": "npm run build:labextension && npm run build:nbextension",
     "clean": "npm run clean:lib && npm run clean:nbextension",
@@ -41,7 +44,7 @@
     "test:firefox": "karma start --browsers=Firefox tests/karma.conf.js",
     "test:ie": "karma start --browsers=IE tests/karma.conf.js",
     "watch": "npm-run-all -p watch:*",
-    "watch:lib": "tsc -w --project src",
+    "watch:lib": "tsc -w",
     "watch:nbextension": "webpack --watch"
   },
   "dependencies": {

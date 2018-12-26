@@ -34,8 +34,6 @@ information:
 - `npm_package_name`: name for the npm "front-end" package holding the JavaScript
   implementation used in your custom widget.
 - `npm_package_version`: initial version of the npm package.
-- `jlab_extension_id`: extension ID to supply to JupyterLab when registering the extension.
-  The recommended format is "jupyter.extensions.<Your UNIQUE designator here>".
 - `project_short_description` : a short description for your project that will
   be used for both the "back-end" and "front-end" packages.
 
@@ -64,7 +62,7 @@ jupyter labextension install .
 For classic notebook, you can run:
 
 ```
-jupyter nbextension install --sys-prefix --symlink --py <your python package name>
+jupyter nbextension install --sys-prefix --symlink --overwrite --py <your python package name>
 jupyter nbextension enable --sys-prefix --py <your python package name>
 ```
 
