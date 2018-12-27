@@ -1,7 +1,5 @@
 # widget-ts-cookiecutter
 
-#### A cookiecutter template for creating a custom Jupyter widget project
-
 A [cookiecutter](https://github.com/audreyr/cookiecutter) template for a custom
 Jupyter widget project.
 
