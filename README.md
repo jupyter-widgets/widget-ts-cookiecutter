@@ -41,7 +41,7 @@ you should run the tests:
 
 ```bash
 # First install the python package. This will also build the JS packages.
-pip install -e ".[test, examples]" .
+pip install -e ".[test, examples]"
 
 # Run the python tests. This should not give you a few sucessful example tests
 py.test
