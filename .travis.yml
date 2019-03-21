@@ -1,6 +1,9 @@
 language: python
+dist: xenial
+services:
+  - xvfb
 python:
-  - 3.6
+  - 3.7
 sudo: false
 addons:
   apt_packages:
@@ -21,8 +24,6 @@ install:
 before_script:
   - |
     export CHROME_BIN=chromium-browser
-    export DISPLAY=:99.0
-    sh -e /etc/init.d/xvfb start
 script:
   - py.test
   - npm test
@@ -35,6 +36,8 @@ script:
   - pip uninstall -y ipywidgettestwidgets
   - pip install .
   - jupyter nbextension enable --py --sys-prefix ipywidgettestwidgets
+  # Validate nbextension (enable does not use exit code):
+  - python -c "from notebook.nbextensions import validate_nbextension; import sys; sys.exit(validate_nbextension('ipywidgettestwidgets/extension') or 0)"
   - pip install jupyterlab
   # Make sure our lab extension was installed.
   - jupyter labextension list

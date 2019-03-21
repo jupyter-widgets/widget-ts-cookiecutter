@@ -90,7 +90,7 @@ setup_args = dict(
     ],
     extras_require = {
         'test': [
-            'pytest',
+            'pytest>=3.6',
             'pytest-cov',
             'nbval',
         ],

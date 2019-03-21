@@ -8,6 +8,6 @@ def _jupyter_nbextension_paths():
     return [{
         'section': 'notebook',
         'src': 'nbextension/static',
-        'dest': '{{ cookiecutter.npm_package_name }}',
-        'require': '{{ cookiecutter.npm_package_name }}/extension'
+        'dest': '{{ cookiecutter.python_package_name }}',
+        'require': '{{ cookiecutter.python_package_name }}/extension'
     }]
