@@ -5,6 +5,7 @@ include setupbase.py
 include pytest.ini
 include .coverage.rc
 
+include tsconfig.json
 include package.json
 include webpack.config.js
 include {{ cookiecutter.python_package_name }}/labextension/*.tgz
