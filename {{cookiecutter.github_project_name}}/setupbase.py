@@ -359,7 +359,7 @@ def install_npm(path=None, build_dir=None, source_dir=None, build_cmd='build', f
 
             if not which(npm_cmd[0]):
                 log.error("`{0}` unavailable.  If you're running this command "
-                          "using sudo, make sure `{0}` is availble to sudo"
+                          "using sudo, make sure `{0}` is available to sudo"
                           .format(npm_cmd[0]))
                 return
 
