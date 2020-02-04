@@ -27,6 +27,14 @@ module.exports = function (config) {
 
 
     karmaTypescriptConfig: {
+      bundlerOptions: {
+        acornOptions: {
+          ecmaVersion: 8,
+        },
+        transforms: [
+          require("karma-typescript-es6-transform")()
+        ]
+      },
       tsconfig: 'tests/tsconfig.json',
       reports: {
         "text-summary": "",
