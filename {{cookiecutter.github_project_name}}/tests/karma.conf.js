@@ -10,6 +10,7 @@ module.exports = function (config) {
       }
     },
     files: [
+      'node_modules/babel-polyfill/dist/polyfill.js',
       { pattern: "tests/src/**/*.ts" },
       { pattern: "src/**/*.ts" },
     ],
