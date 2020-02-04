@@ -10,7 +10,6 @@ module.exports = function (config) {
       }
     },
     files: [
-      'node_modules/babel-polyfill/dist/polyfill.js',
       { pattern: "tests/src/**/*.ts" },
       { pattern: "src/**/*.ts" },
     ],
@@ -29,11 +28,20 @@ module.exports = function (config) {
 
     karmaTypescriptConfig: {
       bundlerOptions: {
+        sourceMap: true,
         acornOptions: {
           ecmaVersion: 8,
         },
         transforms: [
-          require("karma-typescript-es6-transform")()
+          require("karma-typescript-es6-transform")({
+            presets: [
+              ["env", {
+                targets: {
+                  browsers: ["last 2 Chrome versions"]
+                },
+              }]
+            ]
+          })
         ]
       },
       tsconfig: 'tests/tsconfig.json',
