@@ -75,7 +75,7 @@
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.0.0",
     "ts-loader": "^5.2.1",
-    "typescript": "~3.1.2",
+    "typescript": "~3.8",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   },
