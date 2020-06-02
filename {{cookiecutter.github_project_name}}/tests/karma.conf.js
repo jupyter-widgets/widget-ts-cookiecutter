@@ -35,6 +35,11 @@ module.exports = function (config) {
           "directory": "coverage",
           "filename": "coverage.lcov"
         }
+      },
+      bundlerOptions: {
+        transforms: [
+            require("karma-typescript-es6-transform")()
+        ]
       }
     }
   });
