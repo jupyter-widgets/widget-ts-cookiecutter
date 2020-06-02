@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=source
 set BUILDDIR=build
-set SPHINXPROJ={{ cookiecutter.python_package_name }}
+set SPHINXPROJ={{ cookiecutter.python_package_name | replace("-", "_") }}
 
 if "%1" == "" goto help
 

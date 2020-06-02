@@ -1,5 +1,5 @@
 
-{{ cookiecutter.python_package_name }}
+{{ cookiecutter.python_package_name | replace("-", "_") }}
 =====================================
 
 Version: |release|
@@ -10,13 +10,13 @@ Version: |release|
 Quickstart
 ----------
 
-To get started with {{ cookiecutter.python_package_name }}, install with pip::
+To get started with {{ cookiecutter.python_package_name | replace("-", "_") }}, install with pip::
 
-    pip install {{ cookiecutter.python_package_name }}
+    pip install {{ cookiecutter.python_package_name | replace("-", "_") }}
 
 or with conda::
 
-    conda install {{ cookiecutter.python_package_name }}
+    conda install {{ cookiecutter.python_package_name | replace("-", "_") }}
 
 
 Contents

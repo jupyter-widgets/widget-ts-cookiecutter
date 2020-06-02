@@ -19,7 +19,7 @@ from setuptools import setup
 
 
 # The name of the project
-name = '{{ cookiecutter.python_package_name }}'
+name = '{{ cookiecutter.python_package_name | replace("-", "_") }}'
 
 # Ensure a valid python version
 ensure_python('>=3.4')

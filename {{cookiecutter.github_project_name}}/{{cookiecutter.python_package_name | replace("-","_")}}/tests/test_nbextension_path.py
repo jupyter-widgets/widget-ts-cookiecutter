@@ -7,7 +7,7 @@
 
 def test_nbextension_path():
     # Check that magic function can be imported from package root:
-    from {{ cookiecutter.python_package_name }} import _jupyter_nbextension_paths
+    from {{ cookiecutter.python_package_name | replace("-","_")}} import _jupyter_nbextension_paths
     # Ensure that it can be called without incident:
     path = _jupyter_nbextension_paths()
     # Some sanity checks:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# {{ cookiecutter.python_package_name }} documentation build configuration file
+# {{ cookiecutter.python_package_name | replace("-", "_") }} documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -54,7 +54,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = '{{ cookiecutter.python_package_name }}'
+project = '{{ cookiecutter.python_package_name | replace("-", "_") }}'
 copyright = '{% now 'local', '%Y' %}, {{ cookiecutter.author_name }}'
 author = '{{ cookiecutter.author_name }}'
 
@@ -69,7 +69,7 @@ author = '{{ cookiecutter.author_name }}'
 import os
 here = os.path.dirname(__file__)
 repo = os.path.join(here, '..', '..')
-_version_py = os.path.join(repo, '{{ cookiecutter.python_package_name }}', '_version.py')
+_version_py = os.path.join(repo, '{{ cookiecutter.python_package_name | replace("-", "_") }}', '_version.py')
 version_ns = {}
 with open(_version_py) as f:
     exec(f.read(), version_ns)
@@ -116,7 +116,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = '{{ cookiecutter.python_package_name }}doc'
+htmlhelp_basename = '{{ cookiecutter.python_package_name | replace("-", "_") }}doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -143,7 +143,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, '{{ cookiecutter.python_package_name }}.tex', '{{ cookiecutter.python_package_name }} Documentation',
+    (master_doc, '{{ cookiecutter.python_package_name | replace("-", "_") }}.tex', '{{ cookiecutter.python_package_name | replace("-", "_") }} Documentation',
      '{{ cookiecutter.author_name }}', 'manual'),
 ]
 
@@ -154,8 +154,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc,
-    '{{ cookiecutter.python_package_name }}',
-    '{{ cookiecutter.python_package_name }} Documentation',
+    '{{ cookiecutter.python_package_name | replace("-", "_") }}',
+    '{{ cookiecutter.python_package_name | replace("-", "_") }} Documentation',
      [author], 1)
 ]
 
@@ -167,10 +167,10 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc,
-     '{{ cookiecutter.python_package_name }}',
-     '{{ cookiecutter.python_package_name }} Documentation',
+     '{{ cookiecutter.python_package_name | replace("-", "_") }}',
+     '{{ cookiecutter.python_package_name | replace("-", "_") }} Documentation',
      author,
-     '{{ cookiecutter.python_package_name }}',
+     '{{ cookiecutter.python_package_name | replace("-", "_") }}',
      '{{ cookiecutter.project_short_description }}',
      'Miscellaneous'),
 ]
