@@ -14,7 +14,7 @@ cache:
     - $HOME/.npm
 before_install:
   - pip install -U pip setuptools
-  - nvm install 8
+  - nvm install 12
   - pip install cookiecutter
 install:
   - pushd $(mktemp -d)
