@@ -27,7 +27,7 @@ cache:
     - $HOME/.npm
 before_install:
   - pip install -U pip setuptools
-  - nvm install 8
+  - nvm install 12
   - |
     if [[ $GROUP == python ]]; then
       pip install codecov
