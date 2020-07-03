@@ -29,7 +29,7 @@ def example_instance(tmpdir_factory):
                 yield instance_path
             finally:
                 try:
-                    pip.main(['uninstall', 'ipywidgettestwidgets', '-y'])
+                    pip.main(['uninstall', 'jupyter_widget_testwidgets', '-y'])
                 except Exception:
                     pass
 
