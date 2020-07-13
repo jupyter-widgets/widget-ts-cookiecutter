@@ -27,6 +27,7 @@ before_script:
 script:
   - py.test
   - npm test
+  - npm run lint:check
   # Check docs can be build + links
   - pushd docs
   - make html
