@@ -47,8 +47,8 @@ jupyter labextension install .
 For classic notebook, you can run:
 
 ```
-jupyter nbextension install --sys-prefix --symlink --overwrite --py <your python package name>
-jupyter nbextension enable --sys-prefix --py <your python package name>
+jupyter nbextension install --sys-prefix --symlink --overwrite --py {{ cookiecutter.python_package_name  }}
+jupyter nbextension enable --sys-prefix --py {{ cookiecutter.python_package_name  }}
 ```
 
 Note that the `--symlink` flag doesn't work on Windows, so you will here have to run
