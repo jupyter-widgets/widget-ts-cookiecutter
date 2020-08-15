@@ -8,4 +8,4 @@ dependencies:
 - numpy
 - sphinx
 - nbsphinx
-- jupyter_sphinx
+- jupyter_sphinx>=0.2.4

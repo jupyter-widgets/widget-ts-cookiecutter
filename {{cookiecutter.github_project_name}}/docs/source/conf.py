@@ -29,7 +29,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'nbsphinx',
-    'jupyter_sphinx.execute',
+    'jupyter_sphinx',
     'nbsphinx_link',
 ]
 
