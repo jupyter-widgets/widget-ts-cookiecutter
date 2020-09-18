@@ -22,13 +22,14 @@ from setuptools import setup
 name = '{{ cookiecutter.python_package_name }}'
 
 # Ensure a valid python version
-ensure_python('>=3.4')
+ensure_python('>=3.6')
 
 # Get our version
 version = get_version(pjoin(name, '_version.py'))
 
 nb_path = pjoin(HERE, name, 'nbextension', 'static')
-lab_path = pjoin(HERE, name, 'labextension')
+# lab_path = pjoin(HERE, name, 'labextension')
+lab3_path = pjoin(HERE, name, 'lab3extension')
 
 # Representative files that should exist after a successful build
 jstargets = [
@@ -39,14 +40,18 @@ jstargets = [
 package_data_spec = {
     name: [
         'nbextension/static/*.*js*',
-        'labextension/*.tgz'
+        # 'labextension/*.tgz',
+        'lab3extension/*'
     ]
 }
+
+labext_name = "{{ cookiecutter.npm_package_name }}"
 
 data_files_spec = [
     ('share/jupyter/nbextensions/{{ cookiecutter.python_package_name}}',
         nb_path, '*.js*'),
-    ('share/jupyter/lab/extensions', lab_path, '*.tgz'),
+    ("share/jupyter/labextensions/%s" % labext_name, lab3_path, "*.*"),
+#    ('share/jupyter/lab/extensions', lab_path, '*.tgz'),
     ('etc/jupyter/nbconfig/notebook.d' , HERE, '{{ cookiecutter.python_package_name}}.json')
 ]
 
@@ -85,6 +90,7 @@ setup_args = dict(
         'Framework :: Jupyter',
     ],
     include_package_data = True,
+    python_requires=">=3.6",
     install_requires = [
         'ipywidgets>=7.0.0',
     ],

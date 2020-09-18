@@ -30,13 +30,14 @@
   },
   "scripts": {
     "build": "npm run build:lib && npm run build:nbextension",
-    "build:labextension": "npm run clean:labextension && mkdirp {{ cookiecutter.python_package_name }}/labextension && cd {{ cookiecutter.python_package_name }}/labextension && npm pack ../..",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
     "build:lib": "tsc",
     "build:nbextension": "webpack -p",
     "build:all": "npm run build:labextension && npm run build:nbextension",
     "clean": "npm run clean:lib && npm run clean:nbextension",
     "clean:lib": "rimraf lib",
-    "clean:labextension": "rimraf {{ cookiecutter.python_package_name }}/labextension",
+    "clean:labextension": "rimraf {{ cookiecutter.python_package_name }}/jupyterlab_widgets/lab3extension",
     "clean:nbextension": "rimraf {{ cookiecutter.python_package_name }}/nbextension/static/index.js",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:check": "eslint . --ext .ts,.tsx",
@@ -51,7 +52,7 @@
     "watch:nbextension": "webpack --watch"
   },
   "dependencies": {
-    "@jupyter-widgets/base": "^1.1.10 || ^2 || ^3"
+    "@jupyter-widgets/base": "^1.1.10 || ^2 || ^3 || ^4.0.0-beta.1"
   },
   "devDependencies": {
     "@phosphor/application": "^1.6.0",
@@ -90,6 +91,13 @@
     "webpack-cli": "^3.1.2"
   },
   "jupyterlab": {
-    "extension": "lib/plugin"
+    "extension": "lib/plugin",
+    "outputDir": "jupyterlab_widgets/static",
+    "sharedPackages": {
+      "@jupyter-widgets/base": {
+        "bundled": false,
+        "singleton": true
+      }
+    }
   }
 }
