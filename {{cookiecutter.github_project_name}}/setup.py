@@ -29,7 +29,7 @@ version = get_version(pjoin(name, '_version.py'))
 
 nb_path = pjoin(HERE, name, 'nbextension', 'static')
 # lab_path = pjoin(HERE, name, 'labextension')
-lab3_path = pjoin(HERE, name, 'lab3extension')
+lab3_path = pjoin(HERE, name, 'labextension')
 
 # Representative files that should exist after a successful build
 jstargets = [
@@ -41,7 +41,7 @@ package_data_spec = {
     name: [
         'nbextension/static/*.*js*',
         # 'labextension/*.tgz',
-        'lab3extension/*'
+        'labextension/*'
     ]
 }
 
@@ -59,7 +59,7 @@ data_files_spec = [
 cmdclass = create_cmdclass('jsdeps', package_data_spec=package_data_spec,
     data_files_spec=data_files_spec)
 cmdclass['jsdeps'] = combine_commands(
-    install_npm(HERE, build_cmd='build:all'),
+    install_npm(HERE, build_cmd='build'),
     ensure_targets(jstargets),
 )
 
