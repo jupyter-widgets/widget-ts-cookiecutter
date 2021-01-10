@@ -25,9 +25,18 @@ module.exports = function (config) {
     singleRun: true,
     logLevel: config.LOG_INFO,
 
+    customLaunchers: {
+      ChromeCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
 
     karmaTypescriptConfig: {
       tsconfig: 'tests/tsconfig.json',
+      coverageOptions: {
+        instrumentation: false
+      },
       reports: {
         "text-summary": "",
         "html": "coverage",
@@ -37,8 +46,20 @@ module.exports = function (config) {
         }
       },
       bundlerOptions: {
+        sourceMap: false,  // Disabled due to error/bug
+        acornOptions: {
+          ecmaVersion: 8,
+        },
         transforms: [
-            require("karma-typescript-es6-transform")()
+          require("karma-typescript-es6-transform")({
+            presets: [
+              ["@babel/preset-env", {
+                targets: {
+                  browsers: ["last 2 Chrome versions"]
+                },
+              }]
+            ]
+          })
         ]
       }
     }
