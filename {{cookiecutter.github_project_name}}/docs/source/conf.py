@@ -33,6 +33,10 @@ extensions = [
     'nbsphinx_link',
 ]
 
+# Set the nbsphinx JS path to empty to avoid showing twice of the widgets
+nbsphinx_requirejs_path = ""
+nbsphinx_widgets_path = ""
+
 # Ensure our extension is available:
 import sys
 from os.path import dirname, join as pjoin
