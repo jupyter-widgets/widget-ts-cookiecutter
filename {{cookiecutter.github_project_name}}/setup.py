@@ -39,7 +39,7 @@ jstargets = [
 
 package_data_spec = {
     name: [
-        'nbextension/static/*.*js*',
+        'nbextension/static/**js*',
         # 'labextension/*.tgz',
         'labextension/*'
     ]
@@ -50,7 +50,8 @@ labext_name = "{{ cookiecutter.npm_package_name }}"
 data_files_spec = [
     ('share/jupyter/nbextensions/{{ cookiecutter.python_package_name}}',
         nb_path, '*.js*'),
-    ("share/jupyter/labextensions/%s" % labext_name, lab3_path, "*.*"),
+    ("share/jupyter/labextensions/%s" % labext_name, lab3_path, "**"),
+    ("share/jupyter/labextensions/%s" % labext_name, str(HERE), "install.json"),
 #    ('share/jupyter/lab/extensions', lab_path, '*.tgz'),
     ('etc/jupyter/nbconfig/notebook.d' , HERE, '{{ cookiecutter.python_package_name}}.json')
 ]
