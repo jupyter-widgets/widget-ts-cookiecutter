@@ -6,5 +6,8 @@
 	"python_package_name": "{{ cookiecutter.github_project_name | replace('-', '_') }}",
 	"npm_package_name": "{{ cookiecutter.github_project_name }}",
     "npm_package_version": "0.1.0",
-	"project_short_description": "A Custom Jupyter Widget Library"
+	"project_short_description": "A Custom Jupyter Widget Library",
+	"_copy_without_render": [
+		".github/workflows/*"
+	]
 }
