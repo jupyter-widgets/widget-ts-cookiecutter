@@ -80,5 +80,6 @@ jobs:
         pip install jupyterlab
         # Make sure our lab extension was installed.
         jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
-        # Make sure our lab extension can be linked.
-        jupyter labextension link
+        # Make sure our lab extension can be develop installed.
+        pip install jupyter_packaging==0.7.9
+        jupyter labextension develop . --overwrite
