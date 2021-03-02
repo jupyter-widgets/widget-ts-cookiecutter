@@ -62,12 +62,12 @@ jobs:
         # pytest
         # npm run test:ci
 
-    - name: Check docs can be build + links
-      run: |
-        pushd docs
-        make html
-        make linkcheck
-        popd
+    # - name: Check docs can be build + links
+    #   run: |
+    #     pushd jupyter-widget-testwidgets/docs
+    #     make html
+    #     make linkcheck
+    #     popd
 
     - name: Make a non-local install so the data_files get populated
       run: |
