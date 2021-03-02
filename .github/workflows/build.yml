@@ -72,6 +72,7 @@ jobs:
     - name: Make a non-local install so the data_files get populated
       run: |
         pip uninstall -y jupyter_widget_testwidgets
+        cd jupyter-widget-testwidgets
         pip install .
         jupyter nbextension enable --py --sys-prefix jupyter_widget_testwidgets
         # Validate nbextension (enable does not use exit code):
