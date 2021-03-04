@@ -34,7 +34,7 @@ notebook / lab frontend. For lab, this is done by the command:
 
 ```
 jupyter labextension develop --overwrite .
-npm run build
+yarn run build
 ```
 
 For classic notebook, you need to run:
@@ -56,7 +56,7 @@ terminals to watch for changes in the extension's source and automatically rebui
 
 ```bash
 # Watch the source directory in one terminal, automatically rebuilding when needed
-npm run watch
+yarn run watch
 # Run JupyterLab in another terminal
 jupyter lab
 ```

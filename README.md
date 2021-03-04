@@ -47,7 +47,7 @@ pip install -e ".[test, examples]"
 py.test
 
 # Run the JS tests. This should again, only give TODO errors (Expected 'Value' to equal 'Expected value'):
-npm test
+yarn test
 ```
 
 When developing your extensions, you need to manually enable your extensions with the
@@ -55,7 +55,7 @@ notebook / lab frontend. For lab, this is done by the command:
 
 ```
 jupyter labextension develop --overwrite .
-npm run build
+yarn run build
 ```
 
 For classic notebook, you can run:
@@ -78,7 +78,7 @@ terminals to watch for changes in the extension's source and automatically rebui
 
 ```bash
 # Watch the source directory in one terminal, automatically rebuilding when needed
-npm run watch
+yarn run watch
 # Run JupyterLab in another terminal
 jupyter lab
 ```
