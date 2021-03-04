@@ -39,6 +39,14 @@ After this, you will have a directory containing files used for creating a
 custom Jupyter widget. To check that eveything is set up as it should be,
 you should run the tests:
 
+Create a dev environment:
+```bash
+conda create -n {{ cookiecutter.python_package_name }}-dev -c conda-forge nodejs yarn python jupyterlab
+conda activate {{ cookiecutter.python_package_name }}-dev
+```
+
+Install the python. This will also build the TS package.
+
 ```bash
 # First install the python package. This will also build the JS packages.
 pip install -e ".[test, examples]"

@@ -23,9 +23,14 @@ jupyter nbextension enable --py [--sys-prefix|--user|--system] {{ cookiecutter.p
 
 ## Development Installation
 
-
+Create a dev environment:
 ```bash
-# First install the python package. This will also build the JS packages.
+conda create -n {{ cookiecutter.python_package_name }}-dev -c conda-forge nodejs yarn python jupyterlab
+conda activate {{ cookiecutter.python_package_name }}-dev
+```
+
+Install the python. This will also build the TS package.
+```bash
 pip install -e ".[test, examples]"
 ```
 
