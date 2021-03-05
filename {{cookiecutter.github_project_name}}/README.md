@@ -12,27 +12,25 @@
 You can install using `pip`:
 
 ```bash
-pip install {{ cookiecutter.python_package_name  }}
-```
-
-Or if you use jupyterlab:
-
-```bash
-pip install {{ cookiecutter.python_package_name  }}
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
+pip install {{ cookiecutter.python_package_name }}
 ```
 
 If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
 the nbextension:
 ```bash
-jupyter nbextension enable --py [--sys-prefix|--user|--system] {{ cookiecutter.python_package_name  }}
+jupyter nbextension enable --py [--sys-prefix|--user|--system] {{ cookiecutter.python_package_name }}
 ```
 
 ## Development Installation
 
-
+Create a dev environment:
 ```bash
-# First install the python package. This will also build the JS packages.
+conda create -n {{ cookiecutter.python_package_name }}-dev -c conda-forge nodejs yarn python jupyterlab
+conda activate {{ cookiecutter.python_package_name }}-dev
+```
+
+Install the python. This will also build the TS package.
+```bash
 pip install -e ".[test, examples]"
 ```
 
@@ -40,11 +38,11 @@ When developing your extensions, you need to manually enable your extensions wit
 notebook / lab frontend. For lab, this is done by the command:
 
 ```
-jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
-jupyter labextension install .
+jupyter labextension develop --overwrite .
+yarn run build
 ```
 
-For classic notebook, you can run:
+For classic notebook, you need to run:
 
 ```
 jupyter nbextension install --sys-prefix --symlink --overwrite --py {{ cookiecutter.python_package_name  }}
@@ -58,13 +56,14 @@ of those flags here.
 
 ### How to see your changes
 #### Typescript:
-To continuously monitor the project for changes and automatically trigger a rebuild, start Jupyter in watch mode:
+If you use JupyterLab to develop then you can watch the source directory and run JupyterLab at the same time in different
+terminals to watch for changes in the extension's source and automatically rebuild the widget.
+
 ```bash
-jupyter lab --watch
-```
-And in a separate session, begin watching the source directory for changes:
-```bash
-npm run watch
+# Watch the source directory in one terminal, automatically rebuilding when needed
+yarn run watch
+# Run JupyterLab in another terminal
+jupyter lab
 ```
 
 After a change wait for the build to finish and then refresh your browser and the changes should take effect.

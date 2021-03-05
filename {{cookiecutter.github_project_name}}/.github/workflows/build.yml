@@ -49,9 +49,9 @@ jobs:
     - name: Test the extension
       run: |
         python -m pip install --upgrade -v -e ".[test, examples, docs]"
-        npm run lint:check
+        yarn run lint:check
         pytest
-        npm run test:ci
+        yarn run test:ci
     - name: Check docs can be build + links
       run: |
         pushd docs

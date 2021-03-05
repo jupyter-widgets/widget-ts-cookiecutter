@@ -27,8 +27,9 @@ module.exports = [
     entry: './src/extension.ts',
     output: {
       filename: 'index.js',
-      path: path.resolve(__dirname, '{{ cookiecutter.python_package_name }}', 'nbextension', 'static'),
-      libraryTarget: 'amd'
+      path: path.resolve(__dirname, '{{ cookiecutter.python_package_name }}', 'nbextension'),
+      libraryTarget: 'amd',
+      publicPath: '',
     },
     module: {
       rules: rules

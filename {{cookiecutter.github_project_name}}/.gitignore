@@ -145,7 +145,7 @@ $RECYCLE.BIN/
 # ----
 
 **/node_modules/
-{{ cookiecutter.python_package_name  }}/nbextension/static/index.*
+{{ cookiecutter.python_package_name  }}/nbextension/index.*
 {{ cookiecutter.python_package_name  }}/labextension/*.tgz
 
 # Coverage data
