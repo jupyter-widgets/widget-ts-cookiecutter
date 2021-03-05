@@ -1,6 +1,8 @@
 # widget-ts-cookiecutter
 
-A [cookiecutter](https://github.com/audreyr/cookiecutter) template for a custom
+![Github Actions Status](https://github.com/jupyter-widgets/widget-ts-cookiecutter/workflows/Build/badge.svg)
+
+A [cookiecutter](https://github.com/cookiecutter/cookiecutter) template for a custom
 Jupyter widget project.
 
 ## What is widget-ts-cookiecutter?
