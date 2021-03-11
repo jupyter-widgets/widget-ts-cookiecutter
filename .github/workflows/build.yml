@@ -62,7 +62,7 @@ jobs:
 
     - name: Check docs can be build + links
       run: |
-        python -m pip install jupyter_sphinx sphinx sphinx_rtd_theme nbsphinx nbsphinx-link pytest-check-links
+        sudo apt install -y pandoc
         pushd jupyter-widget-testwidgets/docs
         make html
         popd

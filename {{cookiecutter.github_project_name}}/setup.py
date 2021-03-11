@@ -102,14 +102,14 @@ setup_args = dict(
             # Any requirements for the examples to run
         ],
         'docs': [
-            'sphinx>=1.5',
-            'recommonmark',
-            'sphinx_rtd_theme',
-            'nbsphinx',
             'jupyter_sphinx',
+            'nbsphinx',
             'nbsphinx-link',
             'pytest_check_links',
             'pypandoc',
+            'recommonmark',
+            'sphinx>=1.5',
+            'sphinx_rtd_theme',
         ],
     },
     entry_points = {
