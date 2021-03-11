@@ -50,8 +50,6 @@ jobs:
         python -m pip install -U pip setuptools cookiecutter
 
     - name: Test the extension
-      # env:
-      #   CHROME_BIN: chromium-browser
       run: |
         cookiecutter . --config-file tests/testconfig.yaml --no-input
         pushd jupyter-widget-testwidgets
@@ -59,19 +57,23 @@ jobs:
         yarn run lint:check
 
         pytest
-        npm run test:ci
+        yarn run test
+        popd
 
-    # - name: Check docs can be build + links
-    #   run: |
-    #     pushd jupyter-widget-testwidgets/docs
-    #     make html
-    #     make linkcheck
-    #     popd
+    - name: Check docs can be build + links
+      run: |
+        python -m pip install jupyter_sphinx sphinx sphinx_rtd_theme nbsphinx nbsphinx-link pytest-check-links
+        pushd jupyter-widget-testwidgets/docs
+        make html
+        popd
+
+        python -m pytest --check-links
 
     - name: Make a non-local install so the data_files get populated
       run: |
         pip uninstall -y jupyter_widget_testwidgets
-        cd jupyter-widget-testwidgets
+        pushd jupyter-widget-testwidgets
+
         pip install .
 
         # Validate nbextension (enable does not use exit code):
@@ -84,3 +86,5 @@ jobs:
         jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
         # Make sure our lab extension can be develop installed.
         jupyter labextension develop . --overwrite
+
+        popd

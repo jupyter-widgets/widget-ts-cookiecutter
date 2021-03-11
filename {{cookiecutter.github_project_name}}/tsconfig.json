@@ -14,7 +14,8 @@
     "sourceMap": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "target": "es2015"
+    "target": "es2015",
+    "types": ["jest"]
   },
   "include": [
     "src/**/*.ts",
