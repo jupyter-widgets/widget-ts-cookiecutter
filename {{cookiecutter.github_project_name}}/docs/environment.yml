@@ -3,9 +3,10 @@ name: {{cookiecutter.python_package_name}}_docs
 channels:
   - conda-forge
 dependencies:
-- python=3.5
-- nodejs
-- numpy
-- sphinx
-- nbsphinx
-- jupyter_sphinx
+  - python=3.*
+  - nodejs
+  - jupyter_sphinx
+  - sphinx
+  - sphinx_rtd_theme
+  - nbsphinx
+  - nbsphinx-link
