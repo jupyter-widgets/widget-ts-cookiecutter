@@ -35,10 +35,6 @@ function activateWidgetExtension(
   registry.registerWidget({
     name: MODULE_NAME,
     version: MODULE_VERSION,
-    exports: async () =>
-      import(
-        /* webpackChunkName: "{{ cookiecutter.npm_package_name }}-widgets" */
-        './widget'
-      )
+    exports: () => import('./widget'),
   });
 }
