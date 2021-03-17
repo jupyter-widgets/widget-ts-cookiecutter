@@ -37,8 +37,8 @@ function activateWidgetExtension(
     version: MODULE_VERSION,
     exports: async () =>
       import(
-        /* webpackChunkName: "{{ cookiecutter.npm_package_name }}-widgets" */ 
+        /* webpackChunkName: "{{ cookiecutter.npm_package_name }}-widgets" */
         './widget'
-      ),
+      )
   });
 }
