@@ -45,7 +45,8 @@
     "test": "jest",
     "watch": "npm-run-all -p watch:*",
     "watch:lib": "tsc -w",
-    "watch:nbextension": "webpack --watch"
+    "watch:nbextension": "webpack --watch --mode=development",
+    "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
     "@jupyter-widgets/base": "^1.1.10 || ^2.0.0 || ^3.0.0 || ^4.0.0"
