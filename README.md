@@ -16,11 +16,11 @@ of a custom Jupyter interactive widget library.
 
 Install [cookiecutter](https://github.com/audreyr/cookiecutter):
 
-    $ pip install cookiecutter
+    pip install cookiecutter
 
 After installing cookiecutter, use widget-ts-cookiecutter:
 
-    $ cookiecutter https://github.com/jupyter-widgets/widget-ts-cookiecutter.git
+    cookiecutter https://github.com/jupyter-widgets/widget-ts-cookiecutter.git
 
 As widget-ts-cookiecutter runs, you will be asked for basic information about
 your custom Jupyter widget project. You will be prompted for the following
