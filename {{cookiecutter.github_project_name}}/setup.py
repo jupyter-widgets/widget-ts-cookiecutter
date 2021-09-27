@@ -17,6 +17,7 @@ from jupyter_packaging import (
     ensure_targets,
     combine_commands,
     get_version,
+    skip_if_exists
 )
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +35,7 @@ version = get_version(pjoin(name, '_version.py'))
 # Representative files that should exist after a successful build
 jstargets = [
     pjoin(HERE, name, 'nbextension', 'index.js'),
-    pjoin(HERE, 'lib', 'plugin.js'),
+    pjoin(HERE, name, 'labextension', 'package.json'),
 ]
 
 
@@ -56,10 +57,11 @@ data_files_spec = [
 
 cmdclass = create_cmdclass('jsdeps', package_data_spec=package_data_spec,
     data_files_spec=data_files_spec)
-cmdclass['jsdeps'] = combine_commands(
+npm_install = combine_commands(
     install_npm(HERE, build_cmd='build:prod'),
     ensure_targets(jstargets),
 )
+cmdclass['jsdeps'] = skip_if_exists(jstargets, npm_install)
 
 
 setup_args = dict(
