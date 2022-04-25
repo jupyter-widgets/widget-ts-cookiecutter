@@ -41,10 +41,16 @@ After this, you will have a directory containing files used for creating a
 custom Jupyter widget. To check that eveything is set up as it should be,
 you should run the tests:
 
-Create a dev environment:
+Either create a dev environment with [conda](https://www.anaconda.com/):
 ```bash
 conda create -n {{ cookiecutter.python_package_name }}-dev -c conda-forge nodejs yarn python jupyterlab
 conda activate {{ cookiecutter.python_package_name }}-dev
+```
+
+Or create a virtual environment (requires [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) and [npm](https://www.npmjs.com/)):
+```bash
+mkvirtualenv {{ cookiecutter.python_package_name }}-dev
+npm install yarn
 ```
 
 Install the python. This will also build the TS package.
@@ -80,6 +86,11 @@ the `install` command every time that you rebuild your extension. For certain in
 you might also need another flag instead of `--sys-prefix`, but we won't cover the meaning
 of those flags here.
 
+Finally, if you use a virtual environment, you need to install it as a new kernel to IPython:
+
+```
+ipython kernel install --name {{ cookiecutter.python_package_name }}-dev --user
+```
 
 ### How to see your changes
 #### Typescript:
