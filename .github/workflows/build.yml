@@ -47,7 +47,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install -U pip setuptools cookiecutter
+          python -m pip install -U pip setuptools cookiecutter jupyterlab jupyter_packaging==0.7.9 ipywidgets==8.0.0rc0
 
       - name: Test the extension
         run: |
