@@ -1,8 +1,8 @@
 {
-	"author_name": "",
-	"author_email": "",
-	"github_project_name": "",
-	"github_organization_name": "",
+	"author_name": "me",
+	"author_email": "me@me.com",
+	"github_project_name": "myproject",
+	"github_organization_name": "myproject",
 	"python_package_name": "{{ cookiecutter.github_project_name | replace('-', '_') }}",
 	"npm_package_name": "{{ cookiecutter.github_project_name }}",
     "npm_package_version": "0.1.0",
