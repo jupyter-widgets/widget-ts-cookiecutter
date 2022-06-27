@@ -9,8 +9,8 @@ build-backend = "hatchling.build"
 name = "{{ cookiecutter.github_project_name }}"
 description = "{{ cookiecutter.project_short_description }}"
 readme = "README.md"
-license = "BSD"
-requires-python = ">=3.6"
+license = { file = "LICENSE.txt" }
+requires-python = ">=3.7"
 authors = [
     { name = "{{ cookiecutter.author_name }}", email = "{{ cookiecutter.author_email }}" },
 ]
