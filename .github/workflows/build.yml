@@ -4,7 +4,10 @@ on:
   push:
     branches: master
   pull_request:
-    branches: "*"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -18,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: jupyterlab/maintainer-tools/.github/base-setup@v1
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
       - name: Install dependencies
         run: |
