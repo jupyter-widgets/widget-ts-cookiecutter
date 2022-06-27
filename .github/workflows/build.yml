@@ -32,6 +32,7 @@ jobs:
           cookiecutter . --config-file tests/testconfig.yaml --no-input
           pushd jupyter-widget-testwidgets
           python -m pip install --upgrade -v -e ".[test, examples, docs]"
+          yarn
           yarn run lint:check
 
           pytest
