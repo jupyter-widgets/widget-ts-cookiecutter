@@ -41,7 +41,11 @@ jobs:
         run: |
           ls /opt/hostedtoolcache/Python/3.7.13/x64/share/jupyter/labextensions
           ls /opt/hostedtoolcache/Python/3.7.13/x64/share/jupyter/labextensions/jupyter-widget-testwidgets
-          ls jupyter-widget-testwidgets/jupyter-widget-testwidgets/labextension
+          cd jupyter-widget-testwidgets
+          ls
+          ls jupyter-widget-testwidgets
+          ls jupyter-widget-testwidgets/nbextension
+          ls jupyter-widget-testwidgets/labextension
           exit 1
 
       - name: Test the extension
