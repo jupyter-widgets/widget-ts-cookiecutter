@@ -9,6 +9,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash -eux
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -30,31 +34,29 @@ jobs:
       - name: Install the extension
         run: |
           cookiecutter . --config-file tests/testconfig.yaml --no-input
-          pushd jupyter-widget-testwidgets
+          cd jupyter-widget-testwidgets
           python -m pip install --upgrade -v -e ".[test, examples, docs]"
 
       - name: Test the extension
+        working-directory: jupyter-widget-testwidgets
         run: |
-          pushd jupyter-widget-testwidgets
+          pytest
           yarn
           yarn run lint:check
-
-          pytest
           yarn run test
-          popd
 
       - name: Check docs can be build + links
+        working-directory: jupyter-widget-testwidgets/docs
         run: |
           sudo apt install -y pandoc
-          pushd jupyter-widget-testwidgets/docs
           make html
           python -m pytest --check-links
-          popd
 
       - name: Validate extension usage
+        working-directory: jupyter-widget-testwidgets
         run: |
           # Validate nbextension
-          jupyter nbextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
+          jupyter nbextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*enabled"
 
           # Validate labextension
           pip install -U jupyterlab~=3.0 jupyter_packaging~=0.7
@@ -62,5 +64,3 @@ jobs:
           jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
           # Make sure our lab extension can be develop installed.
           jupyter labextension develop . --overwrite
-
-          popd
