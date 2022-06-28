@@ -29,7 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install -U cookiecutter
+          python -m pip install -U cookiecutter jupyterlab~=3.0
 
       - name: Install the extension
         run: |
@@ -58,8 +58,6 @@ jobs:
           jupyter nbextension list 2>&1 | grep -ie "jupyter-js-widgets/extension.*enabled"
 
           # Validate labextension
-          pip install -U jupyterlab~=3.0
-          # Make sure our lab extension was installed.
           jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
           # Make sure our lab extension can be develop installed.
