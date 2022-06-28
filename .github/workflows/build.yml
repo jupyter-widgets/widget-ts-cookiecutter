@@ -34,6 +34,7 @@ jobs:
           python -m pip install --upgrade -v -e ".[test, examples, docs]"
 
       - name: Test the extension
+        run: |
           yarn
           yarn run lint:check
 
