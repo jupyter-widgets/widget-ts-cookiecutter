@@ -67,8 +67,8 @@ artifacts = [
 [tool.hatch.build.targets.wheel.shared-data]
 "{{ cookiecutter.github_project_name }}/nbextension" = "share/jupyter/nbextensions/{{ cookiecutter.github_project_name }}"
 "{{ cookiecutter.github_project_name }}/labextension" = "share/jupyter/labextensions/{{ cookiecutter.github_project_name }}"
-"./install.json" = "share/jupyter/labextensions/{{ cookiecutter.github_project_name }}"
-"./{{ cookiecutter.github_project_name }}.json" = "etc/jupyter/nbconfig/notebook.d"
+"./install.json" = "share/jupyter/labextensions/{{ cookiecutter.github_project_name }}/install.json"
+"./{{ cookiecutter.github_project_name }}.json" = "etc/jupyter/nbconfig/notebook.d/{{ cookiecutter.github_project_name }}.json"
 
 [tool.hatch.build.targets.sdist]
 exclude = [
