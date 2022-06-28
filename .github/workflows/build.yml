@@ -41,7 +41,6 @@ jobs:
         working-directory: jupyter-widget-testwidgets
         run: |
           pytest
-          yarn
           yarn run lint:check
           yarn run test
 

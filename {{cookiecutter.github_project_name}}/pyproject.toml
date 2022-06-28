@@ -55,7 +55,7 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}"
+Homepage = "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}"
 
 [tool.hatch.build]
 artifacts = [
@@ -76,6 +76,7 @@ exclude = [
 ]
 
 [tool.hatch.build.hooks.jupyter-builder]
+build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
     "{{ cookiecutter.github_project_name }}/nbextension/index.js",
     "{{ cookiecutter.github_project_name }}/labextension/package.json",
