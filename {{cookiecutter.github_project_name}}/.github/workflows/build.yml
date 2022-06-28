@@ -27,10 +27,8 @@ jobs:
       - name: Test the extension
         run: |
           python -m pip install --upgrade -v -e ".[test, examples, docs]"
-          yarn
+          python -m pytest
           yarn run lint:check
-
-          pytest
           yarn run test
 
       - name: Check docs can be build + links

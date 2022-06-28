@@ -40,7 +40,7 @@ jobs:
       - name: Test the extension
         working-directory: jupyter-widget-testwidgets
         run: |
-          pytest
+          python -m pytest
           yarn run lint:check
           yarn run test
 
