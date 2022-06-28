@@ -49,7 +49,7 @@ jobs:
         working-directory: jupyter-widget-testwidgets/docs
         run: |
           sudo apt install -y pandoc
-          make html
+          make html SPHINXOPTS="-W"
           python -m pytest --check-links
 
       - name: Validate extension usage
@@ -61,6 +61,7 @@ jobs:
           # Validate labextension
           pip install -U jupyterlab~=3.0
           # Make sure our lab extension was installed.
+          jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
           # Make sure our lab extension can be develop installed.
           jupyter labextension develop . --overwrite
