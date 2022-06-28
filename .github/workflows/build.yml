@@ -44,13 +44,6 @@ jobs:
           yarn run lint:check
           yarn run test
 
-      - name: Check docs can be build + links
-        working-directory: jupyter-widget-testwidgets/docs
-        run: |
-          sudo apt install -y pandoc
-          make html SPHINXOPTS="-W"
-          python -m pytest --check-links
-
       - name: Validate extension usage
         working-directory: jupyter-widget-testwidgets
         run: |
@@ -62,3 +55,11 @@ jobs:
           jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
           # Make sure our lab extension can be develop installed.
           jupyter labextension develop . --overwrite
+
+      - name: Check docs can be build + links
+        if: {{ matrix.os == 'ubuntu-latest' }}
+        working-directory: jupyter-widget-testwidgets/docs
+        run: |
+          sudo apt install -y pandoc
+          make html SPHINXOPTS="-W"
+          python -m pytest --check-links
