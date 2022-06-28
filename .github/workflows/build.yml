@@ -41,8 +41,12 @@ jobs:
         working-directory: jupyter-widget-testwidgets
         run: |
           python -m pytest
-          yarn run lint:check
           yarn run test
+
+      - name: Linting
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          yarn run lint:check
 
       - name: Validate extension usage
         working-directory: jupyter-widget-testwidgets
