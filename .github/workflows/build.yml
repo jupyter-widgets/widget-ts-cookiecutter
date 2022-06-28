@@ -56,11 +56,10 @@ jobs:
         working-directory: jupyter-widget-testwidgets
         run: |
           # Validate nbextension
-          jupyter nbextension list
-          jupyter nbextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*enabled"
+          jupyter nbextension list 2>&1 | grep -ie "jupyter-js-widgets/extension.*enabled"
 
           # Validate labextension
-          pip install -U jupyterlab~=3.0 jupyter_packaging~=0.7
+          pip install -U jupyterlab~=3.0
           # Make sure our lab extension was installed.
           jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
           # Make sure our lab extension can be develop installed.
