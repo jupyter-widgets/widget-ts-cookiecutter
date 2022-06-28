@@ -11,7 +11,7 @@ concurrency:
 
 defaults:
   run:
-    shell: bash -eux
+    shell: bash -eux {0}
 
 jobs:
   build:
