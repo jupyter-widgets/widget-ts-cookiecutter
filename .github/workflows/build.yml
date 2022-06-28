@@ -35,6 +35,7 @@ jobs:
 
       - name: Test the extension
         run: |
+          pushd jupyter-widget-testwidgets
           yarn
           yarn run lint:check
 
