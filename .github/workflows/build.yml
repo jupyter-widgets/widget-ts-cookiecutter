@@ -56,6 +56,7 @@ jobs:
         working-directory: jupyter-widget-testwidgets
         run: |
           # Validate nbextension
+          jupyter nbextension list
           jupyter nbextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*enabled"
 
           # Validate labextension
