@@ -32,14 +32,14 @@ jobs:
 
       - name: Linting
         if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: jupyter-widget-testwidgets
         run: |
           yarn run lint:check
 
       - name: Check docs can be build + links
         if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: jupyter-widget-testwidgets/docs
         run: |
           sudo apt install -y pandoc
-          pushd docs
           make html
           python -m pytest --check-links
-          popd

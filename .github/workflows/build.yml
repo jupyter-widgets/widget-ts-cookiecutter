@@ -45,6 +45,7 @@ jobs:
 
       - name: Linting
         if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: jupyter-widget-testwidgets
         run: |
           yarn run lint:check
 
