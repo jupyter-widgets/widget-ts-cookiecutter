@@ -6,7 +6,7 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "{{ cookiecutter.github_project_name }}"
+name = "{{ cookiecutter.python_package_name }}"
 description = "{{ cookiecutter.project_short_description }}"
 readme = "README.md"
 license = { file = "LICENSE.txt" }
@@ -59,16 +59,16 @@ Homepage = "https://github.com/{{ cookiecutter.github_organization_name }}/{{ co
 
 [tool.hatch.build]
 artifacts = [
-    "{{ cookiecutter.github_project_name }}/nbextension/index.*",
-    "{{ cookiecutter.github_project_name }}/labextension/*.tgz",
-    "{{ cookiecutter.github_project_name }}/labextension",
+    "{{ cookiecutter.python_package_name }}/nbextension/index.*",
+    "{{ cookiecutter.python_package_name }}/labextension/*.tgz",
+    "{{ cookiecutter.python_package_name }}/labextension",
 ]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"{{ cookiecutter.github_project_name }}/nbextension" = "share/jupyter/nbextensions/{{ cookiecutter.github_project_name }}"
-"{{ cookiecutter.github_project_name }}/labextension" = "share/jupyter/labextensions/{{ cookiecutter.github_project_name }}"
-"./install.json" = "share/jupyter/labextensions/{{ cookiecutter.github_project_name }}/install.json"
-"./{{ cookiecutter.github_project_name }}.json" = "etc/jupyter/nbconfig/notebook.d/{{ cookiecutter.github_project_name }}.json"
+"{{ cookiecutter.python_package_name }}/nbextension" = "share/jupyter/nbextensions/{{ cookiecutter.python_package_name }}"
+"{{ cookiecutter.python_package_name }}/labextension" = "share/jupyter/labextensions/{{ cookiecutter.python_package_name }}"
+"./install.json" = "share/jupyter/labextensions/{{ cookiecutter.python_package_name }}/install.json"
+"./{{ cookiecutter.python_package_name }}.json" = "etc/jupyter/nbconfig/notebook.d/{{ cookiecutter.python_package_name }}.json"
 
 [tool.hatch.build.targets.sdist]
 exclude = [
@@ -78,12 +78,12 @@ exclude = [
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "{{ cookiecutter.github_project_name }}/nbextension/index.js",
-    "{{ cookiecutter.github_project_name }}/labextension/package.json",
+    "{{ cookiecutter.python_package_name }}/nbextension/index.js",
+    "{{ cookiecutter.python_package_name }}/labextension/package.json",
 ]
 skip-if-exists = [
-    "{{ cookiecutter.github_project_name }}/nbextension/index.js",
-    "{{ cookiecutter.github_project_name }}/labextension/package.json",
+    "{{ cookiecutter.python_package_name }}/nbextension/index.js",
+    "{{ cookiecutter.python_package_name }}/labextension/package.json",
 ]
 dependencies = [
     "hatch-jupyter-builder>=0.5.0",
@@ -100,7 +100,7 @@ field = [
 ]
 file = [
     { src = "pyproject.toml" },
-    { src = "{{ cookiecutter.github_project_name }}/_version.py" },
+    { src = "{{ cookiecutter.python_package_name }}/_version.py" },
 ]
 
 [tool.tbump.version]
