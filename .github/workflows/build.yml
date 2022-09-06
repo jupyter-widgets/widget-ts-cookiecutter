@@ -4,86 +4,67 @@ on:
   push:
     branches: master
   pull_request:
-    branches: "*"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -eux {0}
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.7", "3.10"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install node
-        uses: actions/setup-node@v2
-        with:
-          node-version: "12.x"
-
-      - name: Install Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.7"
-          architecture: "x64"
-
-      - name: Setup pip cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: pip-3.7-${{ hashFiles('package.json') }}
-          restore-keys: |
-            pip-3.7-
-            pip-
-
-      - name: Get npm cache directory
-        id: npm-cache
-        run: |
-          echo "::set-output name=dir::$(npm config get cache)"
-
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
       - name: Install dependencies
         run: |
-          python -m pip install -U pip setuptools cookiecutter
+          python -m pip install -U cookiecutter jupyterlab~=3.0
 
-      - name: Test the extension
+      - name: Install the extension
         run: |
           cookiecutter . --config-file tests/testconfig.yaml --no-input
-          pushd jupyter-widget-testwidgets
+          cd jupyter-widget-testwidgets
           python -m pip install --upgrade -v -e ".[test, examples, docs]"
+
+      - name: Test the extension
+        working-directory: jupyter-widget-testwidgets
+        run: |
+          python -m pytest
+          yarn run test
+
+      - name: Linting
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: jupyter-widget-testwidgets
+        run: |
           yarn run lint:check
 
-          pytest
-          yarn run test
-          popd
-
-      - name: Check docs can be build + links
+      - name: Validate extension usage
+        working-directory: jupyter-widget-testwidgets
         run: |
-          sudo apt install -y pandoc
-          pushd jupyter-widget-testwidgets/docs
-          make html
-          python -m pytest --check-links
-          popd
-
-      - name: Make a non-local install so the data_files get populated
-        run: |
-          pip uninstall -y jupyter_widget_testwidgets
-          pushd jupyter-widget-testwidgets
-
-          pip install .
-
-          # Validate nbextension (enable does not use exit code):
-          jupyter nbextension enable --py --sys-prefix jupyter_widget_testwidgets
-          python -c "from notebook.nbextensions import validate_nbextension; import sys; sys.exit(validate_nbextension('jupyter_widget_testwidgets/extension') or 0)"
+          # Validate nbextension
+          jupyter nbextension list 2>&1 | grep -ie "jupyter-js-widgets/extension.*enabled"
 
           # Validate labextension
-          pip install -U jupyterlab~=3.0 jupyter_packaging~=0.7
-          # Make sure our lab extension was installed.
+          jupyter labextension list
           jupyter labextension list 2>&1 | grep -ie "jupyter-widget-testwidgets.*OK"
           # Make sure our lab extension can be develop installed.
           jupyter labextension develop . --overwrite
 
-          popd
+      - name: Check docs can be build + links
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: jupyter-widget-testwidgets/docs
+        run: |
+          sudo apt install -y pandoc
+          make html SPHINXOPTS="-W"
+          python -m pytest --check-links
