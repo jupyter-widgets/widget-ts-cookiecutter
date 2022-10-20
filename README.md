@@ -65,7 +65,6 @@ notebook / lab frontend. For lab, this is done by the command:
 
 ```
 jupyter labextension develop --overwrite .
-yarn run build
 ```
 
 For classic notebook, you can run:
@@ -80,6 +79,11 @@ the `install` command every time that you rebuild your extension. For certain in
 you might also need another flag instead of `--sys-prefix`, but we won't cover the meaning
 of those flags here.
 
+Every time you make a change in the TypeScript code, you will need to rebuild it then refresh the browser page:
+
+```
+yarn run build
+```
 
 ### How to see your changes
 #### Typescript:
