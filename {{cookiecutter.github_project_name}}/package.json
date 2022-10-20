@@ -54,6 +54,7 @@
   "devDependencies": {
     "@babel/core": "^7.5.0",
     "@babel/preset-env": "^7.5.0",
+    "@jupyter-widgets/base-manager": "^1.0.2",
     "@jupyterlab/builder": "^3.0.0",
     "@lumino/application": "^1.6.0",
     "@lumino/widgets": "^1.6.0",
