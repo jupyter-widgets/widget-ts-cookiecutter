@@ -29,7 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install -U cookiecutter jupyterlab~=3.0 ipywidgets
+          python -m pip install -U cookiecutter jupyterlab~=3.0 ipywidgets build
 
       - name: Install the extension
         run: |
@@ -37,6 +37,8 @@ jobs:
           cd jupyter-widget-testwidgets
           python -m pip install --upgrade -v -e ".[test, examples, docs]"
 
+      - name: Build wheel
+        run: python -m build -w jupyter-widget-testwidgets
       - name: Test the extension
         working-directory: jupyter-widget-testwidgets
         run: |
