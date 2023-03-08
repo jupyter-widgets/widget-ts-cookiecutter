@@ -31,6 +31,7 @@ conda activate {{ cookiecutter.python_package_name }}-dev
 
 Install the python. This will also build the TS package.
 ```bash
+yarn install
 pip install -e ".[test, examples]"
 ```
 

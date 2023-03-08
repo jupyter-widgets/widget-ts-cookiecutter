@@ -51,6 +51,7 @@ Install the python. This will also build the TS package.
 
 ```bash
 # First install the python package. This will also build the JS packages.
+yarn install
 pip install -e ".[test, examples]"
 
 # Run the python tests. This should not give you a few sucessful example tests
