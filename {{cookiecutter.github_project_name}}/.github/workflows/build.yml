@@ -26,6 +26,7 @@ jobs:
           npm install -g codecov
       - name: Test the extension
         run: |
+          yarn install
           python -m pip install --upgrade -v -e ".[test, examples, docs]"
           python -m pytest
           yarn run test
