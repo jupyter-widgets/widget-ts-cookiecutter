@@ -51,18 +51,17 @@ export class DummyManager extends baseManager.ManagerBase {
     this.el = window.document.createElement('div');
   }
 
-  display_view(
+  async display_view: (
     msg: services.KernelMessage.IMessage,
     view: widgets.DOMWidgetView,
-    options: any
-  ) {
+    options: unknown
+  ): Promise<HTMLElement> {
     // TODO: make this a spy
     // TODO: return an html element
-    return Promise.resolve(view).then((view) => {
-      this.el.appendChild(view.el);
-      view.on('remove', () => console.log('view removed', view));
-      return view.el;
-    });
+    const view_1 = await Promise.resolve(view);
+    this.el.appendChild(view_1.el);
+    view_1.on('remove', () => console.log('view removed', view_1));
+    return view_1.el;
   }
 
   protected loadClass(
@@ -87,26 +86,26 @@ export class DummyManager extends baseManager.ManagerBase {
     }
   }
 
-  _get_comm_info() {
+  _get_comm_info(): Promise<Record<string, unknown>> {
     return Promise.resolve({});
   }
 
-  _create_comm() {
+  _create_comm(): Promise<MockComm> {
     return Promise.resolve(new MockComm());
   }
 
   el: HTMLElement;
 
-  testClasses: { [key: string]: any } = {};
+  testClasses: { [key: string]: unknown } = {};
 }
 
 export interface Constructor<T> {
-  new (attributes?: any, options?: any): T;
+  new (attributes?: unknown, options?: unknown): T;
 }
 
 export function createTestModel<T extends widgets.WidgetModel>(
   constructor: Constructor<T>,
-  attributes?: any
+  attributes?: unknown
 ): T {
   const id = widgets.uuid();
   const widget_manager = new DummyManager();
