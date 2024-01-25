@@ -60,6 +60,9 @@ test = [
 [project.urls]
 Homepage = "https://github.com/{{ cookiecutter.github_organization_name }}/{{ cookiecutter.github_project_name }}"
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [tool.hatch.build]
 artifacts = [
     "{{ cookiecutter.python_package_name }}/nbextension/index.*",
@@ -95,6 +98,7 @@ dependencies = [
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 path = "."
 build_cmd = "build:prod"
+npm = ["jlpm"]
 
 [tool.tbump]
 field = [
