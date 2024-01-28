@@ -25,7 +25,7 @@ jupyter nbextension enable --py [--sys-prefix|--user|--system] {{ cookiecutter.p
 
 Create a dev environment:
 ```bash
-conda create -n {{ cookiecutter.python_package_name }}-dev -c conda-forge nodejs python jupyterlab=3.6.7
+conda create -n {{ cookiecutter.python_package_name }}-dev -c conda-forge nodejs python jupyterlab=4.0.11
 conda activate {{ cookiecutter.python_package_name }}-dev
 ```
 
