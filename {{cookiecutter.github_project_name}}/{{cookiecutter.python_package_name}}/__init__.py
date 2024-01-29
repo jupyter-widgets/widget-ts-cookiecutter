@@ -44,6 +44,6 @@ def _jupyter_nbextension_paths():
     return [{
         'section': 'notebook',
         'src': 'nbextension',
-        'dest': '{{ cookiecutter.npm_package_name}}',
+        'dest': '{{ cookiecutter.python_package_name }}',
         'require': '{{ cookiecutter.python_package_name }}/extension'
     }]
