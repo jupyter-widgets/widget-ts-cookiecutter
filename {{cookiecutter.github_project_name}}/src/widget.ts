@@ -12,8 +12,19 @@ import { MODULE_NAME, MODULE_VERSION } from './version';
 // Import the CSS
 import '../css/widget.css';
 
+export interface ModelDefaults {
+  _model_name: string;
+  _model_module: string;
+  _model_module_version: string;
+  _view_name: string;
+  _view_module: string;
+  _view_module_version: string;
+  value: string;
+}
+
+
 export class ExampleModel extends DOMWidgetModel {
-  defaults() {
+  defaults():ModelDefaults {
     return {
       ...super.defaults(),
       _model_name: ExampleModel.model_name,
@@ -40,14 +51,14 @@ export class ExampleModel extends DOMWidgetModel {
 }
 
 export class ExampleView extends DOMWidgetView {
-  render() {
+  render():void {
     this.el.classList.add('custom-widget');
 
     this.value_changed();
     this.model.on('change:value', this.value_changed, this);
   }
 
-  value_changed() {
+  value_changed():void {
     this.el.textContent = this.model.get('value');
   }
 }
